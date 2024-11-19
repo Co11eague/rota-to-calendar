@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("converter/", include("converter.urls")),
     path('', include('home.urls')),  # Include the URLs from the 'home' app
+    path('signup/', include('signup.urls')),
 ]
 
 if settings.DEBUG:

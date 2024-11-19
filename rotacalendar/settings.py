@@ -27,6 +27,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "myapp" / "static",  # Path to app-specific static files
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"  # This will be the directory where `collectstatic` places all static files
+
 
 # Application definition
 
@@ -37,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'home'
+    'home',
+    'signup'
 ]
 
 MEDIA_URL = '/media/'  # URL to access media files

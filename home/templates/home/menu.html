@@ -25,12 +25,15 @@
         <a href="javascript:;" class="flex items-center justify-between text-gray-500 text-sm text-center lg:text-base font-medium hover:text-indigo-700 transition-all duration-500 mb-2 lg:mr-6 lg:mb-0 mr-auto lg:text-left  lg:m-0">About us</a>
       </li>
       <li class="">
-        <button data-target="full-width-megamenu" class="dropdown-toggle flex items-center justify-between text-gray-500 text-sm text-center lg:text-base font-medium hover:text-prime-blue-700 transition-all duration-500 mb-2 lg:mr-6 lg:mb-0 mr-auto lg:text-left  lg:m-0">Features <svg class="w-3 h-2 ml-1.5 " width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <button id="features-btn" data-target="full-width-megamenu" class="dropdown-toggle flex items-center justify-between text-gray-500 text-sm text-center lg:text-base font-medium hover:text-prime-blue-700 transition-all duration-500 mb-2 lg:mr-6 lg:mb-0 mr-auto lg:text-left  lg:m-0">Features <svg class="w-3 h-2 ml-1.5 " width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 1L3.58579 3.58579C4.25245 4.25245 4.58579 4.58579 5 4.58579C5.41421 4.58579 5.74755 4.25245 6.41421 3.58579L9 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
         </button>
+        {% load static %}
+            <script src="{% static 'home/js/menu.js' %}"></script>
+
         <!-- Dropdown menu -->
-        <div id="full-width-megamenu" aria-labelledby="full-width-megamenu" class="dropdown-menu animate-fade z-10  lg:absolute top-full left-0 right-0 m-auto bg-white rounded-lg shadow-[0px_15px_30px_0px_rgba(16,24,40,0.1)] lg:px-10 xl:px-8 md:px-5 p-4 max-w-screen-2xl xl:py-8 lg:py-4 md:py-2l  ">
+        <div id="features-dropdown" aria-labelledby="full-width-megamenu" class="dropdown-menu animate-fade z-10  lg:absolute top-full left-0 right-0 m-auto bg-white rounded-lg shadow-[0px_15px_30px_0px_rgba(16,24,40,0.1)] lg:px-10 xl:px-8 md:px-5 p-4 max-w-screen-2xl xl:py-8 lg:py-4 md:py-2l  ">
           <div class="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 justify-between ">
             <ul class="text-sm text-gray-700  " aria-labelledby="dropdownLargeButton">
               <h6 class="font-medium text-sm text-gray-500 mb-2"> Features</h6>
@@ -165,10 +168,7 @@
         </div>
       </li>
     </ul>
-    <div class="flex flex-col lg:flex-row gap-y-4 lg:items-center ml-auto justify-center">
-      <button class="bg-indigo-50 text-indigo-600 rounded-full cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 py-3 px-6 text-sm hover:bg-indigo-100"> Login </button>
-      <button class="bg-indigo-600 text-white rounded-full cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 py-3 px-6 text-sm lg:ml-5 hover:bg-indigo-700"> Sign up </button>
-    </div>
+    {% include "home/signbuttons.html" %}
   </div>
 </div>
 </div>
