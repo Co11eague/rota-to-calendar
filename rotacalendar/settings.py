@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
-    'signup'
+    'signup',
+    'aboutus',
 ]
 
 MEDIA_URL = '/media/'  # URL to access media files
