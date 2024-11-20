@@ -1,5 +1,8 @@
 # views.py
 from django.shortcuts import render
+from .models import Slider
+
 
 def index(request):
-    return render(request, 'home/index.html')
+    sliders = Slider.objects.all()  # Fetch all slider images
+    return render(request, 'home/index.html', {'sliders': sliders})

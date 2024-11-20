@@ -1,8 +1,30 @@
 {% extends "home/base.html" %}
 
 {% block content %}
-<div class="text-center">
-    <h2 class="text-2xl font-semibold">This is a beautiful homepage styled with Tailwind</h2>
-    <p class="mt-4 text-gray-600">Use Tailwind classes for easy, responsive design</p>
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+<div class="swiper-container">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'home/css/index.css' %}">
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="{% static 'home/js/index.js' %}"></script>
+    <div class="swiper-wrapper">
+        {% for slide in sliders %}
+<div class="swiper-slide">
+    <img src="{{ slide.image.url }}" alt="{{ slide.title }}" class="slide-image">
+    <div class="slide-content">
+        <h2 class="slide-title">{{ slide.title }}</h2>
+        <p class="slide-description">{{ slide.description }}</p>
+    </div>
 </div>
+        {% endfor %}
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+    <!-- Add Navigation -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+</div>
+
+
 {% endblock %}

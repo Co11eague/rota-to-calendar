@@ -3,7 +3,7 @@
 <div class="container mx-auto ">
 <div class="w-full flex  flex-col lg:flex-row">
   <div class=" flex justify-between items-center lg:flex-row">
-    <a href="javascript:" class="flex items-center">
+    <a href="/" class="flex items-center">
       <img width="164" height="33" fill="none" src="../../../media/images/logo.png" alt="ShiftMate"/>
     </a>
     <button data-collapse-toggle="megamenu-cta" type="button" class="mobile-button inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 " aria-controls="navbar" aria-expanded="false">
@@ -13,13 +13,15 @@
       </svg>
     </button>
       <h1 class="text-2xl font-bold text-gray-800 tracking-wide text-center">
+        <a href="/">
     <span class="text-blue-500">Shift</span><span class="text-green-500">Mate</span>
+          </a>
   </h1>
   </div>
   <div class="hidden w-full lg:flex lg:pl-11 " id="megamenu-cta">
     <ul class="flex lg:items-center gap-y-4 flex-col my-4 lg:my-0 lg:flex-row">
       <li>
-        <a href="javascript:;" class="flex items-center justify-between text-gray-500 text-sm text-center lg:text-base font-medium hover:text-indigo-700 transition-all duration-500 mb-2 lg:mr-6 lg:mb-0 mr-auto lg:text-left lg:m-0">Home</a>
+        <a href="/" class="flex items-center justify-between text-gray-500 text-sm text-center lg:text-base font-medium hover:text-indigo-700 transition-all duration-500 mb-2 lg:mr-6 lg:mb-0 mr-auto lg:text-left lg:m-0">Home</a>
       </li>
       <li>
         <a href="javascript:;" class="flex items-center justify-between text-gray-500 text-sm text-center lg:text-base font-medium hover:text-indigo-700 transition-all duration-500 mb-2 lg:mr-6 lg:mb-0 mr-auto lg:text-left  lg:m-0">About us</a>
@@ -33,7 +35,7 @@
             <script src="{% static 'home/js/menu.js' %}"></script>
 
         <!-- Dropdown menu -->
-        <div id="features-dropdown" aria-labelledby="full-width-megamenu" class="dropdown-menu animate-fade z-10  lg:absolute top-full left-0 right-0 m-auto bg-white rounded-lg shadow-[0px_15px_30px_0px_rgba(16,24,40,0.1)] lg:px-10 xl:px-8 md:px-5 p-4 max-w-screen-2xl xl:py-8 lg:py-4 md:py-2l  ">
+        <div id="features-dropdown" aria-labelledby="full-width-megamenu" class="dropdown-menu animate-fade z-10  lg:absolute top-full left-0 right-0 m-auto bg-white rounded-lg shadow-[0px_15px_30px_0px_rgba(16,24,40,0.1)] lg:px-10 xl:px-8 md:px-5 p-4 max-w-screen-2xl xl:py-8 lg:py-4 md:py-2l  hidden">
           <div class="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 justify-between ">
             <ul class="text-sm text-gray-700  " aria-labelledby="dropdownLargeButton">
               <h6 class="font-medium text-sm text-gray-500 mb-2"> Features</h6>

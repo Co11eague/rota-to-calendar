@@ -1,0 +1,63 @@
+.swiper-container {
+    width: 100%;  /* Ensure the container takes full width */
+    height: 35vw;  /* Set a fixed height for the slider */
+    overflow: hidden;  /* Prevent images from overflowing */
+    position: relative;
+}
+
+.swiper-slide img {
+    width: 100%;   /* Make images responsive */
+    height: auto;  /* Keep aspect ratio */
+    object-fit: cover;  /* Ensure images fill the container without stretching */
+}
+
+.swiper-button-next, .swiper-button-prev {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.swiper-button-next {
+    right: 10px;
+}
+
+.swiper-button-prev {
+    left: 10px;
+}
+
+.swiper-pagination {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+}
+
+/* Title styling */
+.slide-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Description styling */
+.slide-description {
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.slide-content {
+    position: absolute;
+    bottom: 30px;
+    left: 20px;
+    right: 20px;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background behind the text */
+    padding: 15px;
+    border-radius: 8px; /* Optional: Rounded corners for the text box */
+    box-sizing: border-box; /* Ensures padding doesn’t affect width */
+    z-index: 10; /* Make sure the text is on top of the image */
+}
