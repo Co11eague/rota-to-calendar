@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('home.urls')),  # Include the URLs from the 'home' app
     path('signup/', include('signup.urls')),
     path('aboutus/', include('aboutus.urls')),
+    path('signin/', include('signin.urls')),
 ]
 
 if settings.DEBUG:

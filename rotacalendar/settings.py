@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'home',
     'signup',
     'aboutus',
+    'signin'
 ]
 
 MEDIA_URL = '/media/'  # URL to access media files
