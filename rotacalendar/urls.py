@@ -15,17 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.views import LogoutView
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from redbot.core.utils.menus import next_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("converter/", include("converter.urls")),
     path('', include('home.urls')),  # Include the URLs from the 'home' app
     path('signup/', include('signup.urls')),
     path('aboutus/', include('aboutus.urls')),
     path('signin/', include('signin.urls')),
+    path('logout/', LogoutView.as_view(next_page="home"), name='logout'),
 ]
 
 if settings.DEBUG:
