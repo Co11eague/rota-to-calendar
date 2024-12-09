@@ -30,6 +30,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page="home"), name='logout'),
     path('profile/', include('accountProfile.urls')),
     path('settings/', include('accountSettings.urls')),
+    path('conversion/', include('conversion.urls')),
 ]
 
 if settings.DEBUG:

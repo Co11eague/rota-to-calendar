@@ -40,7 +40,7 @@
             <ul class="text-sm text-gray-700  " aria-labelledby="dropdownLargeButton">
               <h6 class="font-medium text-sm text-gray-500 mb-2"> Features</h6>
               <li class="">
-                <a href="{% if user.is_authenticated %}{% url 'aboutus' %}{% else %}{% url 'signin' %}{% endif %}" class="px-3 py-5 transition-all duration-500 hover:bg-gray-50 hover:rounded-xl flex items-center ">
+                <a href="{% url 'conversion' %}" class="px-3 py-5 transition-all duration-500 hover:bg-gray-50 hover:rounded-xl flex items-center ">
                   <div class="bg-orange-50 rounded-lg w-12 h-12 flex items-center justify-center">
                     <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path opacity="0.3" d="M23.75 16.625C23.75 15.3133 22.6867 14.25 21.375 14.25H7.125C5.81332 14.25 4.75 15.3133 4.75 16.625V30.875C4.75 32.1867 5.81332 33.25 7.125 33.25H21.375C22.6867 33.25 23.75 32.1867 23.75 30.875V16.625Z" fill="#F59E0B"></path>
