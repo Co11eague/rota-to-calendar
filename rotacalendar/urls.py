@@ -31,6 +31,7 @@ urlpatterns = [
     path('profile/', include('accountProfile.urls')),
     path('settings/', include('accountSettings.urls')),
     path('conversion/', include('conversion.urls')),
+    path('creation/', include('creation.urls')),
 ]
 
 if settings.DEBUG:

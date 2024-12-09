@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'signin',
     'accountProfile',
     'accountSettings',
-    'conversion'
+    'conversion',
+    'creation'
 ]
 
 LOGIN_URL = '/signin/'
