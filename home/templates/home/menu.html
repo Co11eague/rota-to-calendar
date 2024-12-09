@@ -103,7 +103,7 @@
                 </a>
               </li>
               <li class="">
-                <a href="{% if user.is_authenticated %}{% url 'aboutus' %}{% else %}{% url 'signin' %}{% endif %}" class="px-3 py-5 hover:bg-gray-50 hover:rounded-xl flex items-center transition-all duration-500">
+                <a href="{% url 'accountSettings' %}" class="px-3 py-5 hover:bg-gray-50 hover:rounded-xl flex items-center transition-all duration-500">
                   <div class="bg-lime-50 rounded-lg w-12 h-12 flex items-center justify-center">
                     <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path opacity="0.3" d="M6.3335 8.70801C6.3335 7.39633 7.39682 6.33301 8.7085 6.33301H21.3752C22.6868 6.33301 23.7502 7.39633 23.7502 8.70801V21.3747C23.7502 22.6863 22.6868 23.7497 21.3752 23.7497H8.7085C7.39682 23.7497 6.3335 22.6863 6.3335 21.3747V8.70801Z" fill="#84CC16"></path>
