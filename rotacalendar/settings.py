@@ -48,8 +48,11 @@ INSTALLED_APPS = [
     'home',
     'signup',
     'aboutus',
-    'signin'
+    'signin',
+    'accountProfile'
 ]
+
+LOGIN_URL = '/signin/'
 
 MEDIA_URL = '/media/'  # URL to access media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Path to the media folder

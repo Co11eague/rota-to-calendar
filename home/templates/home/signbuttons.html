@@ -6,7 +6,7 @@
               <span class="text-sm font-medium text-gray-700">Hello, {{ user.username }}!</span>
             </a>
             <!-- Show the user's profile or a logout button if logged in -->
-            <a href="{% url 'home' %}" class="bg-indigo-600 text-white rounded-full cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 py-3 px-6 text-sm lg:ml-5 hover:bg-indigo-700">
+            <a href="{% url 'accountProfile' %}" class="bg-indigo-600 text-white rounded-full cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 py-3 px-6 text-sm lg:ml-5 hover:bg-indigo-700">
                 Profile
             </a>
             <a href="{% url 'logout' %}" class="bg-red-600 text-white rounded-full cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 py-3 px-6 text-sm lg:ml-5 hover:bg-red-700">

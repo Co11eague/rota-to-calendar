@@ -89,7 +89,7 @@
             <ul class="text-sm text-gray-700 " aria-labelledby="dropdownLargeButton">
               <h6 class="font-medium text-sm text-gray-500 mb-2"> Services</h6>
               <li class="">
-                <a href="{% if user.is_authenticated %}{% url 'aboutus' %}{% else %}{% url 'signin' %}{% endif %}" class="px-3 py-5 hover:bg-gray-50 hover:rounded-xl flex items-center transition-all duration-500">
+                <a href="{% url 'accountProfile' %}" class="px-3 py-5 hover:bg-gray-50 hover:rounded-xl flex items-center transition-all duration-500">
                   <div class="bg-rose-50 rounded-lg w-12 h-12 flex items-center justify-center">
                     <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path opacity="0.3" d="M15.092 11.4813C16.0377 10.9509 17.2126 10.9509 18.1583 11.4813L25.4363 15.5637C26.3539 16.0783 26.9168 17.0148 26.9168 18.0265V26.3072C26.9168 27.3189 26.3539 28.2553 25.4363 28.77L18.1583 32.8523C17.2126 33.3828 16.0377 33.3828 15.092 32.8523L7.81401 28.77C6.89644 28.2553 6.3335 27.3189 6.3335 26.3072V18.0265C6.3335 17.0148 6.89644 16.0783 7.81401 15.5637L15.092 11.4813Z" fill="#F43F5E"></path>
