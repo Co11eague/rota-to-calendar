@@ -34,6 +34,7 @@ urlpatterns = [
     path('creation/', include('creation.urls')),
     path('documentation/', include('documentation.urls')),
     path('help/', include('getHelp.urls')),
+    path('history/', include('history.urls')),
 ]
 
 if settings.DEBUG:

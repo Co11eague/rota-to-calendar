@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'conversion',
     'creation',
     'documentation',
-    'getHelp'
+    'getHelp',
+    'history'
 ]
 
 LOGIN_URL = '/signin/'
