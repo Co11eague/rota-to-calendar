@@ -139,7 +139,7 @@
                 </a>
               </li>
               <li class="">
-                <a href="{% if user.is_authenticated %}{% url 'aboutus' %}{% else %}{% url 'signin' %}{% endif %}" class="px-3 py-5 hover:bg-gray-50 hover:rounded-xl flex items-center transition-all duration-500">
+                <a href="{% url 'getHelp' %}" class="px-3 py-5 hover:bg-gray-50 hover:rounded-xl flex items-center transition-all duration-500">
                   <div class="bg-purple-50 rounded-lg w-12 h-12 flex items-center justify-center">
                     <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path opacity="0.3" d="M23.7502 6.30769C23.7502 5.44653 23.0133 4.75 22.0956 4.75H7.98809C7.55042 4.75 7.13058 4.91391 6.82048 5.20585C6.51038 5.49779 6.33527 5.89399 6.3335 6.30769V25.3546C6.33273 25.6151 6.4011 25.8717 6.53236 26.1008C6.66362 26.3299 6.85358 26.5242 7.08484 26.666C7.31611 26.8077 7.58129 26.8924 7.85612 26.9122C8.13094 26.932 8.40663 26.8863 8.65796 26.7793L15.4906 23.9109L22.7655 20.8525C23.3683 20.5992 23.7502 20.0483 23.7502 19.4278V6.30769Z" fill="#A855F7"></path>

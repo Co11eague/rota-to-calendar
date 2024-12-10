@@ -33,6 +33,7 @@ urlpatterns = [
     path('conversion/', include('conversion.urls')),
     path('creation/', include('creation.urls')),
     path('documentation/', include('documentation.urls')),
+    path('help/', include('getHelp.urls')),
 ]
 
 if settings.DEBUG:
