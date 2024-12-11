@@ -19,7 +19,6 @@ from django.contrib.auth.views import LogoutView
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
-from redbot.core.utils.menus import next_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),

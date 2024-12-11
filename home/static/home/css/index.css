@@ -61,3 +61,21 @@
     box-sizing: border-box; /* Ensures padding doesn’t affect width */
     z-index: 10; /* Make sure the text is on top of the image */
 }
+
+/* Add this CSS to your static stylesheet */
+/* Custom sliding effect */
+@keyframes slideInFromTop {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.slide-in-toast {
+    animation: slideInFromTop 0.5s ease-out;
+}
+
