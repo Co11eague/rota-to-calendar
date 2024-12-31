@@ -12,6 +12,15 @@
     <header class="bg-blue-600 text-white py-4">
     </header>
     {% include "home/menu.html" %}
+
+    <body>
+    <h1>Upload Table Image</h1>
+<form method="post" enctype="multipart/form-data" action="/conversion/upload-image/">
+    {% csrf_token %}
+    <input type="file" name="table_image" required>
+    <button type="submit">Process</button>
+</form>
+
 </body>
 
 </html>

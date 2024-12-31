@@ -29,9 +29,7 @@ ALLOWED_HOSTS = []
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "myapp" / "static",  # Path to app-specific static files
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]  # Add this to allow static files in your project directory
 
 STATIC_ROOT = BASE_DIR / "staticfiles"  # This will be the directory where `collectstatic` places all static files
 
@@ -55,10 +53,13 @@ INSTALLED_APPS = [
     'creation',
     'documentation',
     'getHelp',
-    'history'
+    'history',
+    'django_extensions'
 ]
 
 LOGIN_URL = '/signin/'
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 MEDIA_URL = '/media/'  # URL to access media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Path to the media folder
