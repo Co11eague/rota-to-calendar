@@ -7,13 +7,11 @@
 </head>
 <body>
     <h1>Uploaded Images</h1>
-{% for row in image_urls %}
+{% for image in image_urls %}
     <div style="display: flex; flex-direction: row;">
-        {% for url in row %}
             <div style="margin-right: 10px;">
-                <img src="{{ url }}" alt="Table Cell Image">
+                <img src="{{ image }}" alt="Table Cell Image">
             </div>
-        {% endfor %}
     </div>
 {% endfor %}
 

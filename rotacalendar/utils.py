@@ -11,7 +11,7 @@ def deskew_image(image):
     # Detect lines in the image using Hough Line Transform
     lines = cv2.HoughLines(edges, 1, np.pi / 180, threshold=100)
 
-    # If no lines are detected, return original image
+    # If no lines are detected, return the original image
     if lines is None:
         return image
 
@@ -19,29 +19,17 @@ def deskew_image(image):
     angles = [np.rad2deg(line[0][1]) for line in lines]
     median_angle = np.median(angles)  # The most common angle (median)
 
-    # Calculate the rotation matrix and apply the transformation
-    (h, w) = image.shape[:2]
-    center = (w // 2, h // 2)
-    rotation_matrix = cv2.getRotationMatrix2D(center, median_angle, 1.0)
+    # If the median angle is close to horizontal or vertical (within a tolerance), skip rotation
+    tolerance = 1.0  # Adjust this value for sensitivity
+    if -tolerance < median_angle < tolerance or 90 - tolerance < median_angle < 90 + tolerance:
+        return image
 
-    # Compute the bounding box of the rotated image to ensure all pixels are retained
-    cos = np.abs(rotation_matrix[0, 0])
-    sin = np.abs(rotation_matrix[0, 1])
+    # Optionally log or return the median angle for analysis instead of rotating
+    print(f"Detected skew angle: {median_angle} degrees (skipping rotation)")
 
-    # New width and height
-    new_w = int(h * sin + w * cos)
-    new_h = int(h * cos + w * sin)
+    return image
 
-    # Adjust the rotation matrix to account for the translation
-    rotation_matrix[0, 2] += (new_w / 2) - center[0]
-    rotation_matrix[1, 2] += (new_h / 2) - center[1]
-
-    # Perform the rotation and ensure that the whole image is included
-    deskewed_image = cv2.warpAffine(image, rotation_matrix, (new_w, new_h), flags=cv2.INTER_CUBIC)
-
-    return deskewed_image
-
-def split_table_into_matrix(image_path):
+def split_table_into_list(image_path):
     # Load the image
     image = cv2.imread(image_path)
 
@@ -68,10 +56,8 @@ def split_table_into_matrix(image_path):
     bounding_boxes = [cv2.boundingRect(cnt) for cnt in contours]
     sorted_boxes = sorted(bounding_boxes, key=lambda b: (b[1], b[0]))  # Sort by y, then x
 
-    # Create a matrix of cells
-    table_matrix = []
-    current_row = []
-    last_y = -1
+    # Create a 1D list of cells
+    cell_list = []
 
     for box in sorted_boxes:
         x, y, w, h = box
@@ -80,18 +66,8 @@ def split_table_into_matrix(image_path):
         if w < 10 or h < 10:
             continue
 
-        # New row detected
-        if last_y != -1 and abs(y - last_y) > 20:  # Tolerance for row separation
-            table_matrix.append(current_row)
-            current_row = []
-
         # Extract the cell as an image (submatrix)
         cell = image[y:y + h, x:x + w]
-        current_row.append(cell)
-        last_y = y
+        cell_list.append(cell)
 
-    # Add the last row
-    if current_row:
-        table_matrix.append(current_row)
-
-    return table_matrix
+    return cell_list
