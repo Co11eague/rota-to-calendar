@@ -49,6 +49,9 @@ def split_table_into_list(image_path):
     # Combine horizontal and vertical lines to detect table grid
     grid = cv2.bitwise_or(horizontal, vertical)
 
+    inpainted_image = cv2.inpaint(image, grid, 3, cv2.INPAINT_TELEA)
+
+
     # Find contours of the grid
     contours, _ = cv2.findContours(grid, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -66,8 +69,10 @@ def split_table_into_list(image_path):
         if w < 10 or h < 10:
             continue
 
-        # Extract the cell as an image (submatrix)
-        cell = image[y:y + h, x:x + w]
-        cell_list.append(cell)
+        # Extract the cell as an image (submatrix), then crop slightly to exclude borders
+        margin = 3  # Adjust based on border thickness
+        cropped_cell = inpainted_image[y + margin:y + h - margin, x + margin:x + w - margin]
+
+        cell_list.append(cropped_cell)
 
     return cell_list

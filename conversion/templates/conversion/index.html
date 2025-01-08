@@ -12,15 +12,18 @@
     <header class="bg-blue-600 text-white py-4">
     </header>
     {% include "home/menu.html" %}
-
-    <body>
     <h1>Upload Table Image</h1>
 <form method="post" enctype="multipart/form-data" action="/conversion/upload-image/">
     {% csrf_token %}
-    <input type="file" name="table_image" required>
+        <div class="mb-4">
+            <label for="table_image" class="block text-sm font-medium text-gray-700">Upload Table Image</label>
+            <input type="file" name="table_image" id="table_image" class="mt-2 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+        </div>
+            <div class="mb-4">
+            <label for="column_amount" class="block text-sm font-medium text-gray-700">Number of Columns</label>
+            <input type="number" name="column_amount" id="column_amount" class="mt-2 block w-full text-sm border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter the number of columns" min="1" required>
+        </div>
     <button type="submit">Process</button>
 </form>
-
 </body>
-
 </html>
