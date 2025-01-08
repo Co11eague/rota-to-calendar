@@ -58,7 +58,7 @@ model = load_model()
 def preprocess_image(image, target_height=32, target_width=80, keep_ratio_with_pad=True):
     """Preprocess the image: resize, pad, normalize, and convert to tensor"""
 
-    #image.save(os.path.join(settings.MEDIA_ROOT, f"normal{uuid.uuid4()}.png"))
+    image.save(os.path.join(settings.MEDIA_ROOT, f"normal{uuid.uuid4()}.png"))
 
 
     # Convert to grayscale if image is in RGB
@@ -123,7 +123,7 @@ def process_table_image(request):
         column_amount = int(request.POST.get('column_amount', 1))
 
 
-        uploaded_table = UploadedTable.objects.create(user=request.user, image=uploaded_image)
+        uploaded_table = UploadedTable.objects.create(user=request.user, image=uploaded_image, column_count=column_amount)
 
         uploaded_image_path = uploaded_table.image.path  # This gives the local file path of the image
 

@@ -58,6 +58,7 @@ def split_table_into_list(image_path):
     # Sort contours to maintain order
     bounding_boxes = [cv2.boundingRect(cnt) for cnt in contours]
     sorted_boxes = sorted(bounding_boxes, key=lambda b: (b[1], b[0]))  # Sort by y, then x
+    sorted_boxes.pop(0)
 
     # Create a 1D list of cells
     cell_list = []
