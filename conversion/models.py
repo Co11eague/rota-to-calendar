@@ -10,6 +10,7 @@ class UploadedTable(models.Model):
 
 class TableCell(models.Model):
     table = models.ForeignKey(UploadedTable, related_name='cells', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='split_cells/')  # Original table image
     column_number = models.IntegerField()  # Column number in the table
     row_number = models.IntegerField()
     ocr_text = models.TextField()

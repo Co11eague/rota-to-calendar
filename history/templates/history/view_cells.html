@@ -35,8 +35,7 @@
 
             <!-- Content Section (Text and OCR Info) -->
             <div class="text-left p-2 flex flex-col justify-center items-center flex-grow">
-                <p><strong>Row:</strong> {{ cell.row_number }}</p>
-                <p><strong>Column:</strong> {{ cell.column_number }}</p>
+<img src="{{ cell.image.url }}" alt="Cell Image" class="w-full max-w-screen-lg object-contain rounded-md">
                 <p><strong>OCR Text:</strong></p>
                 <p class="text-gray-600">{{ cell.ocr_text }}</p>
             </div>
@@ -85,7 +84,8 @@ populateInput("end-date", "end-date-input");
     </script>
 
     <!-- Form for Calendar Data -->
-    <form id="conversion-form" class="bg-white p-4 rounded-lg shadow-lg">
+    <form method="post" enctype="multipart/form-data" action="/history/calendar-convert/" id="conversion-form" class="bg-white p-4 rounded-lg shadow-lg">
+        {% csrf_token %}
         <h3 class="text-lg mb-4">Selected Data:</h3>
         <div class="grid grid-cols-2 gap-4">
             <label>
@@ -114,9 +114,13 @@ populateInput("end-date", "end-date-input");
             </label>
 
         </div>
-        <button id="convert-calendar" type="button"
+        <button name="action" value="convert" type="submit"
                 class="bg-blue-600 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700">
-            Convert to Calendar
+            Convert to Calendar (.ics)
+        </button>
+        <button name="action" value="google" type="submit"
+                class="bg-green-600 text-white px-4 py-2 mt-4 rounded hover:bg-green-700">
+            Open in Google Calendar
         </button>
     </form>
 </div>

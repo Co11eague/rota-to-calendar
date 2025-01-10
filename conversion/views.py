@@ -7,9 +7,11 @@ import cv2
 import numpy as np
 import torch
 from django.contrib.auth.decorators import login_required
+from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from conversion.model import Model
 from conversion.models import UploadedTable, TableCell
@@ -115,6 +117,26 @@ def index(request):
 	return render(request, 'conversion/index.html')
 
 
+def convert_to_inmemory_uploadedfile(image, name="cell_image.png"):
+    """
+    Converts a numpy array image to a Django InMemoryUploadedFile.
+    """
+    # Convert the NumPy array to PNG format
+    _, buffer = cv2.imencode('.png', image)
+    image_data = BytesIO(buffer.tobytes())
+
+    # Create an InMemoryUploadedFile (same structure as uploaded file from a form)
+    uploaded_file = InMemoryUploadedFile(
+        file=image_data,  # The file object that we want Django to treat as an uploaded file
+        field_name=None,   # Not needed for our purpose
+        name=name,         # Name the file should have
+        content_type='image/png',  # Image content type (change to match your image type if needed)
+        size=image_data.getbuffer().nbytes,  # File size in bytes
+        charset=None
+    )
+
+    return uploaded_file
+
 @login_required
 def process_table_image(request):
     if request.method == 'POST' and 'table_image' in request.FILES:
@@ -138,8 +160,11 @@ def process_table_image(request):
 
             # Prepare the PIL image for OCR preprocessing
             pil_image = Image.open(BytesIO(cell_buffer.tobytes()))
+            _, image_buffer = cv2.imencode('.png', image)
 
             predicted_text = run_ocr_on_image(pil_image)
+
+            uploaded_file = convert_to_inmemory_uploadedfile(image, f"cell_{uuid.uuid4()}.png")
 
             print("Spejimas:" + predicted_text)
             # Save cell data directly to the database
@@ -148,6 +173,7 @@ def process_table_image(request):
                 column_number=(i % column_amount) + 1,
                 row_number= i // column_amount + 1,
                 ocr_text=predicted_text,
+                image=uploaded_file
             )
 
 
@@ -155,7 +181,7 @@ def process_table_image(request):
         # Optionally delete the original uploaded image if no longer needed
 
         # Return the image URLs for rendering
-        return render(request, 'conversion/show_split_images.html', {'image_urls': saved_image_urls})
+        return redirect('/history/' + str(uploaded_table.id) + '/cells/')
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 # Create your views here.
