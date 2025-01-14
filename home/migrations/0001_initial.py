@@ -4,24 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	initial = True
 
-    initial = True
+	dependencies = [
+	]
 
-    dependencies = [
-    ]
-
-    operations = [
-        migrations.CreateModel(
-            name='Slider',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(blank=True, max_length=200, null=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('image', models.ImageField(upload_to='slider_images/')),
-                ('order', models.PositiveIntegerField(default=0)),
-            ],
-            options={
-                'ordering': ['order'],
-            },
-        ),
-    ]
+	operations = [
+		migrations.CreateModel(
+			name='Slider',
+			fields=[
+				('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+				('title', models.CharField(blank=True, max_length=200, null=True)),
+				('description', models.TextField(blank=True, null=True)),
+				('image', models.ImageField(upload_to='slider_images/')),
+				('order', models.PositiveIntegerField(default=0)),
+			],
+			options={
+				'ordering': ['order'],
+			},
+		),
+	]

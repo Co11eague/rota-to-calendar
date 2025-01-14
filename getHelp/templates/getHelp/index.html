@@ -9,30 +9,30 @@
 
 </head>
 <body class="bg-gray-100">
-    <header class="bg-blue-600 text-white py-4">
-    </header>
-    {% include "home/menu.html" %}
+<header class="bg-blue-600 text-white py-4">
+</header>
+{% include "home/menu.html" %}
 </body>
 <form method="post" class="space-y-6">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-            <div>
-                {{ form.name.label_tag }}
-                {{ form.name }}
-            </div>
-            <div>
-                {{ form.email.label_tag }}
-                {{ form.email }}
-            </div>
-                <div>
-                {{ form.message.label_tag }}
-                {{ form.message }}
-            </div>
-            <div>
-                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
-                    Submit
-                </button>
-            </div>
-        </form>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div>
+        {{ form.name.label_tag }}
+        {{ form.name }}
+    </div>
+    <div>
+        {{ form.email.label_tag }}
+        {{ form.email }}
+    </div>
+    <div>
+        {{ form.message.label_tag }}
+        {{ form.message }}
+    </div>
+    <div>
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+            Submit
+        </button>
+    </div>
+</form>
 
 </html>

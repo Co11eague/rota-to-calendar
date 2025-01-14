@@ -22,69 +22,84 @@
 
     <h2 class="text-xl text-center my-4">Table Cells</h2>
     <!-- Dynamic Grid -->
-<div class="grid gap-4 mb-8" style="grid-template-columns: repeat({{ table.column_count }}, auto);">
-    {% for cell in cells %}
-        <div class="cell bg-white p-4 rounded-lg shadow-lg cursor-pointer flex" data-text="{{ cell.ocr_text }}" data-row="{{ cell.row_number }}" data-col="{{ cell.column_number }}">
+    <div class="grid gap-4 mb-8" style="grid-template-columns: repeat({{ table.column_count }}, auto);">
+        {% for cell in cells %}
+            <div class="cell bg-white p-4 rounded-lg shadow-lg cursor-pointer flex" data-text="{{ cell.ocr_text }}"
+                 data-row="{{ cell.row_number }}" data-col="{{ cell.column_number }}">
 
-            <!-- Left Button Group -->
-            <div class="flex flex-col items-center space-y-2 left-buttons mr-4" style="visibility: hidden;">
-                <button id="name" type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Name</button>
-                <button id="start-time" type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Start Time</button>
-                <button id="start-date" type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Start Date</button>
+                <!-- Left Button Group -->
+                <div class="flex flex-col items-center space-y-2 left-buttons mr-4" style="visibility: hidden;">
+                    <button id="name" type="button"
+                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Name
+                    </button>
+                    <button id="start-time" type="button"
+                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Start Time
+                    </button>
+                    <button id="start-date" type="button"
+                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Start Date
+                    </button>
+                </div>
+
+                <!-- Content Section (Text and OCR Info) -->
+                <div class="text-left p-2 flex flex-col justify-center items-center flex-grow">
+                    <img src="{{ cell.image.url }}" alt="Cell Image"
+                         class="w-full max-w-screen-lg object-contain rounded-md">
+                    <p><strong>OCR Text:</strong></p>
+                    <p class="text-gray-600">{{ cell.ocr_text }}</p>
+                </div>
+
+                <!-- Right Button Group -->
+                <div class="flex flex-col items-center space-y-2 right-buttons ml-4" style="visibility: hidden;">
+                    <button id="location" type="button"
+                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Location
+                    </button>
+                    <button id="end-time" type="button"
+                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">End Time
+                    </button>
+                    <button id="end-date" type="button"
+                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">End Date
+                    </button>
+                </div>
+
             </div>
-
-            <!-- Content Section (Text and OCR Info) -->
-            <div class="text-left p-2 flex flex-col justify-center items-center flex-grow">
-<img src="{{ cell.image.url }}" alt="Cell Image" class="w-full max-w-screen-lg object-contain rounded-md">
-                <p><strong>OCR Text:</strong></p>
-                <p class="text-gray-600">{{ cell.ocr_text }}</p>
-            </div>
-
-            <!-- Right Button Group -->
-            <div class="flex flex-col items-center space-y-2 right-buttons ml-4" style="visibility: hidden;">
-                <button id="location" type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Location</button>
-                <button id="end-time" type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">End Time</button>
-                <button id="end-date" type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">End Date</button>
-            </div>
-
-        </div>
-    {% endfor %}
-</div>
+        {% endfor %}
+    </div>
     <script>
 
-document.querySelectorAll(".cell").forEach(cell => {
-        cell.addEventListener("click", () => {
-            console.log("Cell clicked!");
-            const leftButtons = cell.querySelector(".left-buttons");
-            const rightButtons = cell.querySelector(".right-buttons");
+        document.querySelectorAll(".cell").forEach(cell => {
+            cell.addEventListener("click", () => {
+                console.log("Cell clicked!");
+                const leftButtons = cell.querySelector(".left-buttons");
+                const rightButtons = cell.querySelector(".right-buttons");
 
-            // Toggle visibility of the buttons
-            leftButtons.style.visibility = leftButtons.style.visibility === "hidden" ? "visible" : "hidden";
-            rightButtons.style.visibility = rightButtons.style.visibility === "hidden" ? "visible" : "hidden";
+                // Toggle visibility of the buttons
+                leftButtons.style.visibility = leftButtons.style.visibility === "hidden" ? "visible" : "hidden";
+                rightButtons.style.visibility = rightButtons.style.visibility === "hidden" ? "visible" : "hidden";
+            });
         });
-    });
-const populateInput = (buttonId, inputId) => {
-    const buttons = document.querySelectorAll(`#${buttonId}`);
-    buttons.forEach(button => {
-        button.addEventListener("click", () => {
-            const cell = button.closest('.cell');  // Find the .cell element containing this button
-            const ocrText = cell.getAttribute('data-text');  // Get the OCR text from the data-text attribute
-            document.querySelector(`#${inputId}`).value = ocrText;  // Populate the corresponding input field
-        });
-    });
-};
+        const populateInput = (buttonId, inputId) => {
+            const buttons = document.querySelectorAll(`#${buttonId}`);
+            buttons.forEach(button => {
+                button.addEventListener("click", () => {
+                    const cell = button.closest('.cell');  // Find the .cell element containing this button
+                    const ocrText = cell.getAttribute('data-text');  // Get the OCR text from the data-text attribute
+                    document.querySelector(`#${inputId}`).value = ocrText;  // Populate the corresponding input field
+                });
+            });
+        };
 
-// Call the function for each button/input pairing
-populateInput("name", "name-input");
-populateInput("start-time", "start-time-input");
-populateInput("start-date", "start-date-input");
-populateInput("location", "location-input");
-populateInput("end-time", "end-time-input");
-populateInput("end-date", "end-date-input");
+        // Call the function for each button/input pairing
+        populateInput("name", "name-input");
+        populateInput("start-time", "start-time-input");
+        populateInput("start-date", "start-date-input");
+        populateInput("location", "location-input");
+        populateInput("end-time", "end-time-input");
+        populateInput("end-date", "end-date-input");
     </script>
 
     <!-- Form for Calendar Data -->
-    <form method="post" enctype="multipart/form-data" action="/history/calendar-convert/" id="conversion-form" class="bg-white p-4 rounded-lg shadow-lg">
+    <form method="post" enctype="multipart/form-data" action="/history/calendar-convert/" id="conversion-form"
+          class="bg-white p-4 rounded-lg shadow-lg">
         {% csrf_token %}
         <h3 class="text-lg mb-4">Selected Data:</h3>
         <div class="grid grid-cols-2 gap-4">
@@ -94,23 +109,28 @@ populateInput("end-date", "end-date-input");
             </label>
             <label>
                 <strong>Location:</strong>
-                <input id="location-input" name="Location" type="text" class="w-full border border-gray-300 rounded p-2">
+                <input id="location-input" name="Location" type="text"
+                       class="w-full border border-gray-300 rounded p-2">
             </label>
             <label>
                 <strong>Start Date:</strong>
-                <input id="start-date-input" name="Start Date" type="text" class="w-full border border-gray-300 rounded p-2">
+                <input id="start-date-input" name="Start Date" type="text"
+                       class="w-full border border-gray-300 rounded p-2">
             </label>
             <label>
                 <strong>End Date:</strong>
-                <input id="end-date-input" name="End Date" type="text" class="w-full border border-gray-300 rounded p-2">
+                <input id="end-date-input" name="End Date" type="text"
+                       class="w-full border border-gray-300 rounded p-2">
             </label>
             <label>
                 <strong>Start Time:</strong>
-                <input id="start-time-input" name="Start Time" type="text" class="w-full border border-gray-300 rounded p-2">
+                <input id="start-time-input" name="Start Time" type="text"
+                       class="w-full border border-gray-300 rounded p-2">
             </label>
             <label>
                 <strong>End Time:</strong>
-                <input id="end-time-input" name="End Time" type="text" class="w-full border border-gray-300 rounded p-2">
+                <input id="end-time-input" name="End Time" type="text"
+                       class="w-full border border-gray-300 rounded p-2">
             </label>
 
         </div>

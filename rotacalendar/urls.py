@@ -14,28 +14,27 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import LogoutView
 from django.urls import include, path
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('home.urls')),  # Include the URLs from the 'home' app
-    path('signup/', include('signup.urls')),
-    path('aboutus/', include('aboutus.urls')),
-    path('signin/', include('signin.urls')),
-    path('logout/', LogoutView.as_view(next_page="home"), name='logout'),
-    path('profile/', include('accountProfile.urls')),
-    path('settings/', include('accountSettings.urls')),
-    path('conversion/', include('conversion.urls')),
-    path('creation/', include('creation.urls')),
-    path('documentation/', include('documentation.urls')),
-    path('help/', include('getHelp.urls')),
-    path('history/', include('history.urls')),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
+	              path('admin/', admin.site.urls),
+	              path('', include('home.urls')),  # Include the URLs from the 'home' app
+	              path('signup/', include('signup.urls')),
+	              path('aboutus/', include('aboutus.urls')),
+	              path('signin/', include('signin.urls')),
+	              path('logout/', LogoutView.as_view(next_page="home"), name='logout'),
+	              path('profile/', include('accountProfile.urls')),
+	              path('settings/', include('accountSettings.urls')),
+	              path('conversion/', include('conversion.urls')),
+	              path('creation/', include('creation.urls')),
+	              path('documentation/', include('documentation.urls')),
+	              path('help/', include('getHelp.urls')),
+	              path('history/', include('history.urls')),
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+	urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
