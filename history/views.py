@@ -6,6 +6,9 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from ics import Calendar, Event
+from schedule.models import Calendar as LocalCalendar
+from schedule.models import Event as LocalEvent  # Assuming you're using django-scheduler's Event model
+
 
 from conversion.models import UploadedTable, TableCell
 
@@ -45,6 +48,18 @@ def convert(request):
 			return HttpResponse(
 				"Invalid date/time format. Please use YYYY-MM-DD for dates and HH:MM (24-hour format) for times.",
 				status=400)
+
+		if True:
+			calendar = get_object_or_404(LocalCalendar, slug="shifts-calendar")
+
+			# Save the event to the database
+			event = LocalEvent.objects.create(
+				title=name,
+				start=start_datetime,
+				end=end_datetime,
+				creator=request.user,  # Use the logged-in user as the event creator
+				calendar=calendar  # Or your default calendar
+			)
 
 		if action == 'convert':
 
