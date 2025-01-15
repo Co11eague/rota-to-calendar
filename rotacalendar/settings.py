@@ -53,7 +53,6 @@ INSTALLED_APPS = [
 	'getHelp',
 	'history',
 	'django_extensions',
-	'django.contrib.sites',
 	'schedule',
 ]
 
