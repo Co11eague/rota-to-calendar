@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
+
+from accountSettings.models import UserSettings
 from .models import UserProfile
 
 class UserProfileInline(admin.StackedInline):
@@ -9,8 +11,14 @@ class UserProfileInline(admin.StackedInline):
     verbose_name_plural = "Profile"
     fk_name = "user"
 
+class UserSettingsInline(admin.StackedInline):
+    model = UserSettings
+    can_delete = False
+    verbose_name_plural = "Settings"
+    fk_name = "user"
+
 class CustomUserAdmin(UserAdmin):
-    inlines = (UserProfileInline,)
+    inlines = (UserProfileInline, UserSettingsInline,)
 
     def get_inline_instances(self, request, obj=None):
         # Display the inline only if the user instance exists

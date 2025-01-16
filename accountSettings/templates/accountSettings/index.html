@@ -12,6 +12,32 @@
 <header class="bg-blue-600 text-white py-4">
 </header>
 {% include "home/menu.html" %}
-</body>
+<div class="bg-white p-6 shadow-md rounded-md">
+    <h3 class="text-lg font-bold mb-3">Settings</h3>
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+<div>
+                {{ form.darkMode.label_tag }}
+                {{ form.darkMode }}
+            </div>
 
+            <div>
+                {{ form.ocrRecognition.label_tag }}
+                {{ form.ocrRecognition }}
+            </div>
+
+            <div>
+                {{ form.saveToCalendar.label_tag }}
+                {{ form.saveToCalendar }}
+            </div>
+            <div>
+                <button type="submit"
+                        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+                    Save
+                </button>
+            </div>
+    </form>
+</div>
+</body>
 </html>

@@ -17,7 +17,19 @@ def index(request):
 	# Instantiate the password change form
 	if request.method == 'POST' and 'change_password' in request.POST:
 		password_form = CustomPasswordChangeForm(user, request.POST)
-		accountProfile_form = PersonalDataForm(instance=user_profile)
+		accountProfile_form = PersonalDataForm(
+            initial={
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'date_of_birth': user_profile.date_of_birth,
+                'phone_number': user_profile.phone_number,
+                'address': user_profile.address,
+                'profile_picture': user_profile.profile_picture,
+            },
+            instance=user_profile
+        )
+
 		if password_form.is_valid():
 			password_form.save()
 			update_session_auth_hash(request, password_form.user)  # Keep user logged in after password change
@@ -29,14 +41,29 @@ def index(request):
 		accountProfile_form = PersonalDataForm(request.POST, request.FILES, instance=user_profile)
 		password_form = CustomPasswordChangeForm(user)
 		if accountProfile_form.is_valid():
-			accountProfile_form.save(accountProfile_form)
+			user.first_name = accountProfile_form.cleaned_data['first_name']
+			user.last_name = accountProfile_form.cleaned_data['last_name']
+			user.email = accountProfile_form.cleaned_data['email']
+			user.save()
+			accountProfile_form.save()
 			messages.success(request, 'Your profile was successfully updated!')
 			return redirect('accountProfile')
 		else:
 			messages.error(request, 'Please correct the error below.')
 	else:
 		password_form = CustomPasswordChangeForm(user)
-		accountProfile_form = PersonalDataForm(instance=user_profile)
+		accountProfile_form = PersonalDataForm(
+            initial={
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'date_of_birth': user_profile.date_of_birth,
+                'phone_number': user_profile.phone_number,
+                'address': user_profile.address,
+                'profile_picture': user_profile.profile_picture,
+            },
+            instance=user_profile
+        )
 
 	return render(
 		request,

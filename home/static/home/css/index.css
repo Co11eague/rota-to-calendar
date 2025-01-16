@@ -59,7 +59,7 @@
     padding: 15px;
     border-radius: 8px; /* Optional: Rounded corners for the text box */
     box-sizing: border-box; /* Ensures padding doesn’t affect width */
-    z-index: 10; /* Make sure the text is on top of the image */
+    z-index: 100; /* Make sure the text is on top of the image */
 }
 
 /* Add this CSS to your static stylesheet */
