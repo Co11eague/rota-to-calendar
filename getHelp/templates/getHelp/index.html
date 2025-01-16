@@ -12,27 +12,65 @@
 <header class="bg-blue-600 text-white py-4">
 </header>
 {% include "home/menu.html" %}
+<div class="container mx-auto mt-8">
+
+    <div class="bg-white p-6 shadow-md rounded-md">
+        <h3 class="text-lg font-bold mb-3">Request Help</h3>
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div>
+                {{ form.name.label_tag }}
+                {{ form.name }}
+            </div>
+            <div>
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+            <div>
+                {{ form.message.label_tag }}
+                {{ form.message }}
+            </div>
+            <div>
+                <button type="submit"
+                        name="action" value="help"
+                        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
+        <div class="bg-white p-6 shadow-md rounded-md">
+        <h3 class="text-lg font-bold mb-3">Request To Fine Tune Native Model</h3>
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            {{ fineTuneForm.non_field_errors }}
+            <div>
+                {{ fineTuneForm.name.label_tag }}
+                {{ fineTuneForm.name }}
+            </div>
+            <div>
+                {{ fineTuneForm.email.label_tag }}
+                {{ fineTuneForm.email }}
+            </div>
+            <div>
+                {{ fineTuneForm.message.label_tag }}
+                {{ fineTuneForm.message }}
+            </div>
+            <div>
+                {{ fineTuneForm.file.label_tag }}
+                {{ fineTuneForm.file }}
+            </div>
+            <div>
+                <button type="submit"
+                        name="action" value="fine-tune"
+                        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
-<form method="post" class="space-y-6">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    <div>
-        {{ form.name.label_tag }}
-        {{ form.name }}
-    </div>
-    <div>
-        {{ form.email.label_tag }}
-        {{ form.email }}
-    </div>
-    <div>
-        {{ form.message.label_tag }}
-        {{ form.message }}
-    </div>
-    <div>
-        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
-            Submit
-        </button>
-    </div>
-</form>
 
 </html>

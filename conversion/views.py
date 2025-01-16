@@ -11,7 +11,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from easyocr import easyocr
 
+from accountSettings.models import UserSettings
 from conversion.model import Model
 from conversion.models import UploadedTable, TableCell
 from conversion.utils import AttnLabelConverter
@@ -139,6 +141,7 @@ def process_table_image(request):
 
 		uploaded_image = request.FILES['table_image']
 		column_amount = int(request.POST.get('column_amount', 1))
+		reader = easyocr.Reader(['en'])
 
 		uploaded_table = UploadedTable.objects.create(user=request.user, image=uploaded_image,
 		                                              column_count=column_amount)
@@ -157,7 +160,22 @@ def process_table_image(request):
 			pil_image = Image.open(BytesIO(cell_buffer.tobytes()))
 			_, image_buffer = cv2.imencode('.png', image)
 
-			predicted_text = run_ocr_on_image(pil_image)
+
+			ocrMode = UserSettings.objects.get(user=request.user).ocrRecognition
+
+			if ocrMode == "native":
+				predicted_text = run_ocr_on_image(pil_image)
+			else:
+				result = reader.readtext(image)
+
+				if result:
+					best_prediction = max(result, key=lambda x: x[2])
+					bbox, text, confidence = best_prediction
+					predicted_text = text
+				else:
+					predicted_text=""
+
+
 
 			uploaded_file = convert_to_inmemory_uploadedfile(image, f"cell_{uuid.uuid4()}.png")
 

@@ -9,7 +9,7 @@ from ics import Calendar, Event
 from schedule.models import Calendar as LocalCalendar
 from schedule.models import Event as LocalEvent  # Assuming you're using django-scheduler's Event model
 
-
+from accountSettings.models import UserSettings
 from conversion.models import UploadedTable, TableCell
 
 
@@ -49,7 +49,8 @@ def convert(request):
 				"Invalid date/time format. Please use YYYY-MM-DD for dates and HH:MM (24-hour format) for times.",
 				status=400)
 
-		if True:
+		saveToCalendar = UserSettings.objects.get(user=request.user).saveToCalendar
+		if saveToCalendar:
 			calendar = get_object_or_404(LocalCalendar, slug="shifts-calendar")
 
 			# Save the event to the database
