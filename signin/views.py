@@ -17,6 +17,8 @@ def index(request):
 				return redirect('home')  # Redirect to a protected page after login
 			else:
 				form.add_error(None, 'Invalid login credentials.')
+	elif request.user.is_authenticated:
+		return redirect('home')
 	else:
 		form = LoginForm()
 

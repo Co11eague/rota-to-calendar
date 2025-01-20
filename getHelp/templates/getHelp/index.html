@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShiftMate</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'getHelp/css/output.css' %}" rel="stylesheet">
     <link rel="icon" href="../../../media/images/logo.png" type="image/x-icon">
 
 </head>
@@ -31,6 +32,15 @@
                 {{ form.message.label_tag }}
                 {{ form.message }}
             </div>
+                                                <div>
+                {{ form.helpType.label_tag }}
+                {{ form.helpType }}
+            </div>
+                        <div>
+                {{ form.file.label_tag }}
+                {{ form.file }}
+            </div>
+
             <div>
                 <button type="submit"
                         name="action" value="help"
@@ -39,37 +49,6 @@
                 </button>
             </div>
         </form>
-    </div>
-        <div class="bg-white p-6 shadow-md rounded-md">
-        <h3 class="text-lg font-bold mb-3">Request To Fine Tune Native Model</h3>
-        <form method="post" enctype="multipart/form-data" class="space-y-6">
-            {% csrf_token %}
-            {{ fineTuneForm.non_field_errors }}
-            <div>
-                {{ fineTuneForm.name.label_tag }}
-                {{ fineTuneForm.name }}
-            </div>
-            <div>
-                {{ fineTuneForm.email.label_tag }}
-                {{ fineTuneForm.email }}
-            </div>
-            <div>
-                {{ fineTuneForm.message.label_tag }}
-                {{ fineTuneForm.message }}
-            </div>
-            <div>
-                {{ fineTuneForm.file.label_tag }}
-                {{ fineTuneForm.file }}
-            </div>
-            <div>
-                <button type="submit"
-                        name="action" value="fine-tune"
-                        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
-                    Submit
-                </button>
-            </div>
-        </form>
-    </div>
 </div>
 </body>
 

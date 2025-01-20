@@ -14,6 +14,8 @@ def index(request):
 			return redirect('home')
 		else:
 			print(form.errors)  # Debug: Show errors in the console
+	elif request.user.is_authenticated:
+		return redirect('home')
 	else:
 		form = SignupForm()
 	return render(request, 'signup/index.html', {'form': form})
