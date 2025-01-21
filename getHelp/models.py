@@ -12,8 +12,8 @@ class Contact(models.Model):
 		return self.name
 
 	class Help(models.TextChoices):
-		GENERAL = 'general', 'General Help'
-		FINE_TUNING = 'fine-tuning', 'Fine-tuning Help'
+		GENERAL = 'general', 'General'
+		FINE_TUNING = 'fine-tuning', 'Fine-tuning'
 
 	helpType = models.CharField(
 		max_length=15,
