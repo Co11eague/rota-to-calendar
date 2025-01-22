@@ -25,7 +25,7 @@ def index(request):
                 'date_of_birth': user_profile.date_of_birth,
                 'phone_number': user_profile.phone_number,
                 'address': user_profile.address,
-                'profile_picture': user_profile.profile_picture,
+                'profile_picture': user_profile.profile_picture.url if user_profile.profile_picture else None,
             },
             instance=user_profile
         )
@@ -60,7 +60,7 @@ def index(request):
                 'date_of_birth': user_profile.date_of_birth,
                 'phone_number': user_profile.phone_number,
                 'address': user_profile.address,
-                'profile_picture': user_profile.profile_picture,
+                'profile_picture': user_profile.profile_picture.url if user_profile.profile_picture else None,
             },
             instance=user_profile
         )
