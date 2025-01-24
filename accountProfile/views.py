@@ -7,12 +7,14 @@ from django.contrib import messages
 
 from accountProfile.forms import CustomPasswordChangeForm, PersonalDataForm
 from accountProfile.models import UserProfile
+from accountSettings.models import UserSettings
 
 
 @login_required
 def index(request):
 	user = User.objects.get(id=request.user.id)
 	user_profile = UserProfile.objects.get(user=request.user)
+	user_settings = UserSettings.objects.get(user=request.user)
 
 	# Instantiate the password change form
 	if request.method == 'POST' and 'change_password' in request.POST:
@@ -73,6 +75,7 @@ def index(request):
 			'userProfile': user_profile,
 			'password_form': password_form,
 			'accountProfile_form': accountProfile_form,
+			'dark': user_settings.darkMode
 		}
 	)
 

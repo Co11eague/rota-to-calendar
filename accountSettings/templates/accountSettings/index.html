@@ -1,46 +1,52 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{% if dark %}dark{% endif %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShiftMate</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'accountSettings/css/output.css' %}" rel="stylesheet">
     <link rel="icon" href="../../../media/images/logo.png" type="image/x-icon">
-
 </head>
-<body class="bg-gray-100">
-<header class="bg-blue-600 text-white py-4">
+<body class="bg-gray-100 dark:bg-gray-900">
+<header class="bg-blue-600 text-white py-4 dark:bg-blue-800">
 </header>
 
-{% include "home/menu.html" %}
-<div class="container mx-auto mt-8">
-<div class="bg-white p-6 shadow-md rounded-md">
-    <h3 class="text-lg font-bold mb-3">Settings</h3>
-    <form method="post" class="space-y-6">
+{% include "home/menu.html" with dark=dark %}
+<div class="container mx-auto mt-12 p-6 max-w-lg bg-white shadow-lg rounded-md dark:bg-gray-800">
+    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center mb-4">
+        Settings</h1>
+    <form method="post" class="space-y-2 md:space-y-2">
         {% csrf_token %}
         {{ form.non_field_errors }}
-<div>
-                {{ form.darkMode.label_tag }}
+        <div>
+            <label class="inline-flex items-center cursor-pointer">
                 {{ form.darkMode }}
-            </div>
-
-            <div>
-                {{ form.ocrRecognition.label_tag }}
-                {{ form.ocrRecognition }}
-            </div>
-
-            <div>
-                {{ form.saveToCalendar.label_tag }}
+                <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                <span class="block text-sm font-medium text-gray-900 dark:text-gray-300 ms-3">Dark mode</span>
+            </label>
+        </div>
+        <div>
+            <label class="inline-flex items-center cursor-pointer">
                 {{ form.saveToCalendar }}
-            </div>
+                <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                <span class="block text-sm font-medium text-gray-900 dark:text-gray-300 ms-3">Save conversions to calendar</span>
+            </label>
+        </div>
+        <div>
+            <label class="inline-flex items-center pb-2">
+                <span class="block text-sm font-medium text-gray-900 dark:text-gray-300 ms-3 me-1">OCR recognition model</span>
+                {{ form.ocrRecognition }}
+            </label>
             <div>
                 <button type="submit"
-                        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+                        name="action" value="help"
+                        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition">
                     Save
                 </button>
             </div>
+        </div>
     </form>
-</div>
 </div>
 </body>
 </html>

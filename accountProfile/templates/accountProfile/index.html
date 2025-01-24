@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{% if dark %}dark{% endif %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,17 +9,17 @@
     <script src="{% static 'accountProfile/js/index.js' %}"></script>
     <link rel="icon" href="../../../media/images/logo.png" type="image/x-icon">
 </head>
-<body class="bg-gray-100">
-<header class="bg-blue-600 text-white py-4">
+<body class="bg-gray-100 dark:bg-gray-900">
+<header class="bg-blue-600 text-white py-4 dark:bg-blue-800">
 </header>
-{% include "home/menu.html" %}
+{% include "home/menu.html" with dark=dark%}
 
 <div class="container mx-auto mt-8 mb-8">
-    <h1 class="text-2xl font-bold mb-4 text-center">
+    <h1 class="text-2xl font-bold mb-4 text-center dark:text-white">
         Welcome, {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}!
     </h1>
     <div class="flex flex-wrap gap-4">
-        <div class="bg-white p-6 shadow-md rounded-md flex-1 min-w-[300px]">
+        <div class="bg-white p-6 shadow-md dark:bg-gray-800 dark:text-gray-200 rounded-md flex-1 min-w-[300px]">
             <h2 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-left mb-4">
                 Update Personal Details</h2>
             <form method="post" enctype="multipart/form-data" class="space-y-4">
@@ -45,7 +45,7 @@
                                 <div class="flex items-center space-x-4">
                                     <!-- Image Preview -->
                                     <div id="image-preview-container"
-                                         class="w-24 h-24 border rounded bg-gray-50 overflow-hidden flex justify-center items-center">
+                                         class="w-24 h-24 border rounded bg-gray-50 overflow-hidden dark:bg-gray-700 flex justify-center items-center">
                                         {% if field.value %}
                                             <img id="preview-image" src="{{ field.value }}" alt="Image preview"
                                                  class="object-cover w-full h-full">
@@ -68,14 +68,14 @@
                 {% endfor %}
                 <div>
                     <button type="submit" name="update_profile"
-                            class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+                            class="dark:bg-blue-700 dark:hover:bg-blue-600 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
                         Save Changes
                     </button>
                 </div>
             </form>
 
         </div>
-        <div class="bg-white p-6 shadow-md rounded-md flex-1 min-w-[300px]">
+        <div class="bg-white dark:bg-gray-800 dark:text-gray-200 p-6 shadow-md rounded-md flex-1 min-w-[300px]">
             <h2 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-left mb-4">
                 Create new password</h2>
             <form method="post" class="space-y-4">
@@ -83,7 +83,7 @@
                 {{ password_form.non_field_errors }}
 
                 <div>
-                    <label for="old-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Old
+                    <label for="old-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Old
                         password</label>
                     {{ password_form.old_password }}
                     {% if password_form.old_password.errors %}
@@ -92,7 +92,7 @@
                 </div>
 
                 <div>
-                    <label for="new-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New
+                    <label for="new-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">New
                         password</label>
                     {{ password_form.new_password1 }}
                     {% if password_form.new_password1.errors %}
@@ -101,7 +101,7 @@
                 </div>
 
                 <div>
-                    <label for="old-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm
+                    <label for="old-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Confirm
                         password</label>
                     {{ password_form.new_password2 }}
                     {% if password_form.new_password2.errors %}
@@ -111,7 +111,7 @@
 
                 <div>
                     <button type="submit" name="change_password"
-                            class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="dark:bg-blue-700 dark:hover:bg-blue-600 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Update Password
                     </button>
                 </div>
@@ -121,5 +121,4 @@
     </div>
 </div>
 </body>
-
 </html>

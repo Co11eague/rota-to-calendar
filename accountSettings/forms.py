@@ -15,14 +15,14 @@ class SettingsForm(forms.ModelForm):
 
 		widgets = {
 			'darkMode': forms.CheckboxInput(attrs={
-				'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500',
+				'class': 'sr-only peer',
 				'placeholder': 'Dark Mode'
 			}),
-			'ocrRecognition': forms.RadioSelect(attrs={
-				'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+			'ocrRecognition': forms.Select(attrs={
+				'class': 'text-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1',
 			}),
 			'saveToCalendar': forms.CheckboxInput(attrs={
-				'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500',
+				'class': 'sr-only peer',
 			})
 		}
 

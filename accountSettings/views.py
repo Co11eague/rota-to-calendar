@@ -23,5 +23,5 @@ def index(request):
 
 
 
-	return render(request, 'accountSettings/index.html', {'form': settings_form})
+	return render(request, 'accountSettings/index.html', {'form': settings_form, 'dark': userSettings.darkMode})
 # Create your views here.

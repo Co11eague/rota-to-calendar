@@ -1,33 +1,32 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{% if dark %}dark{% endif %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShiftMate</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'aboutus/css/output.css' %}" rel="stylesheet">
     <link rel="icon" href="../../../media/images/logo.png" type="image/x-icon">
-
 </head>
-<body class="bg-gray-100">
-<header class="bg-blue-600 text-white py-4">
+<body class="bg-gray-100 dark:bg-gray-900">
+<header class="bg-blue-600 text-white py-4 dark:bg-blue-800">
 </header>
 {% include "home/menu.html" %}
-</body>
-
-<section class="bg-white py-12 px-6 md:px-16 lg:px-32">
+<section class="bg-white py-12 px-6 md:px-16 lg:px-32 dark:bg-gray-800 dark:text-white">
     <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-3xl font-extrabold text-gray-800 mb-4">About Us</h2>
-        <p class="text-lg text-gray-600">
-            Welcome to <span class="text-blue-600 font-semibold">Shift</span><span class="text-green-600 font-semibold">Mate</span>
+        <h2 class="text-3xl font-bold text-gray-800 mb-4 dark:text-white">About Us</h2>
+        <p class="text-lg text-gray-600 dark:text-gray-400">
+            Welcome to <span class="text-blue-600 font-semibold dark:text-blue-400">Shift</span><span class="text-green-600 font-semibold dark:text-green-400">Mate</span>
             — your ultimate partner in effortless scheduling and planning.
             Our mission is to simplify your workflow with intuitive tools designed for modern teams and individuals.
             From managing tasks to coordinating shifts, we bring clarity and efficiency to your day, helping you focus
             on what matters most.
             Whether you're juggling personal commitments or running a dynamic team, <span
-                class="text-blue-600 font-semibold">Shift</span><span class="text-green-600 font-semibold">Mate</span>
+                class="text-blue-600 font-semibold dark:text-blue-400">Shift</span><span class="text-green-600 font-semibold dark:text-green-400">Mate</span>
             is here to make it easier, smarter, and more effective.
             Let us take the stress out of planning so you can achieve more.
         </p>
     </div>
 </section>
+</body>
 </html>
