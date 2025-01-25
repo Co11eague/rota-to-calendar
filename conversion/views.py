@@ -14,6 +14,7 @@ from django.shortcuts import render, redirect
 from easyocr import easyocr
 
 from accountSettings.models import UserSettings
+from conversion.forms import ConversionForm
 from conversion.model import Model
 from conversion.models import UploadedTable, TableCell
 from conversion.utils import AttnLabelConverter
@@ -108,12 +109,6 @@ def run_ocr_on_image(image):
 
 	return pred_text  # Return the predicted text
 
-
-@login_required
-def index(request):
-	return render(request, 'conversion/index.html')
-
-
 def convert_to_inmemory_uploadedfile(image, name="cell_image.png"):
 	"""
 	Converts a numpy array image to a Django InMemoryUploadedFile.
@@ -133,6 +128,15 @@ def convert_to_inmemory_uploadedfile(image, name="cell_image.png"):
 	)
 
 	return uploaded_file
+
+
+
+@login_required
+def index(request):
+	user_settings = UserSettings.objects.get(user=request.user)
+	conversionForm = ConversionForm()
+
+	return render(request, 'conversion/index.html', {'conversionForm': conversionForm, 'dark': user_settings.darkMode})
 
 
 @login_required
@@ -160,7 +164,6 @@ def process_table_image(request):
 			pil_image = Image.open(BytesIO(cell_buffer.tobytes()))
 			_, image_buffer = cv2.imencode('.png', image)
 
-
 			ocrMode = UserSettings.objects.get(user=request.user).ocrRecognition
 
 			if ocrMode == "native":
@@ -173,9 +176,7 @@ def process_table_image(request):
 					bbox, text, confidence = best_prediction
 					predicted_text = text
 				else:
-					predicted_text=""
-
-
+					predicted_text = ""
 
 			uploaded_file = convert_to_inmemory_uploadedfile(image, f"cell_{uuid.uuid4()}.png")
 
