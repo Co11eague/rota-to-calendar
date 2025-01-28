@@ -141,59 +141,64 @@ def index(request):
 
 @login_required
 def process_table_image(request):
-	if request.method == 'POST' and 'table_image' in request.FILES:
+	if request.method == 'POST':
 
-		uploaded_image = request.FILES['table_image']
-		column_amount = int(request.POST.get('column_amount', 1))
-		reader = easyocr.Reader(['en'])
 
-		uploaded_table = UploadedTable.objects.create(user=request.user, image=uploaded_image,
-		                                              column_count=column_amount)
+		conversion_form = ConversionForm(request.POST, request.FILES)
 
-		uploaded_image_path = uploaded_table.image.path  # This gives the local file path of the image
 
-		# Process the table into a matrix (assuming you have a function for this)
-		table_list = split_table_into_list(uploaded_image_path)
+		if conversion_form.is_valid():
+			uploaded_table = conversion_form.save(commit=False)
 
-		# Save each cell image using FileSystemStorage
-		saved_image_urls = []
-		for i, image in enumerate(table_list):
-			_, cell_buffer = cv2.imencode('.png', image)  # Convert to PNG format for storage
+			uploaded_table.user = request.user
 
-			# Prepare the PIL image for OCR preprocessing
-			pil_image = Image.open(BytesIO(cell_buffer.tobytes()))
-			_, image_buffer = cv2.imencode('.png', image)
+			uploaded_table.save()
 
-			ocrMode = UserSettings.objects.get(user=request.user).ocrRecognition
+			uploaded_image_path = uploaded_table.image.path  # Local file path of the image
 
-			if ocrMode == "native":
-				predicted_text = run_ocr_on_image(pil_image)
-			else:
-				result = reader.readtext(image)
+			# Process the table into a matrix (assuming you have a function for this)
+			table_list = split_table_into_list(uploaded_image_path)
 
-				if result:
-					best_prediction = max(result, key=lambda x: x[2])
-					bbox, text, confidence = best_prediction
-					predicted_text = text
+			reader = easyocr.Reader(['en'])
+
+			# Save each cell image using FileSystemStorage
+			saved_image_urls = []
+			for i, image in enumerate(table_list):
+				_, cell_buffer = cv2.imencode('.png', image)  # Convert to PNG format for storage
+
+				# Prepare the PIL image for OCR preprocessing
+				pil_image = Image.open(BytesIO(cell_buffer.tobytes()))
+				_, image_buffer = cv2.imencode('.png', image)
+
+				ocrMode = UserSettings.objects.get(user=request.user).ocrRecognition
+
+				if ocrMode == "native":
+					predicted_text = run_ocr_on_image(pil_image)
 				else:
-					predicted_text = ""
+					result = reader.readtext(image)
 
-			uploaded_file = convert_to_inmemory_uploadedfile(image, f"cell_{uuid.uuid4()}.png")
+					if result:
+						best_prediction = max(result, key=lambda x: x[2])
+						bbox, text, confidence = best_prediction
+						predicted_text = text
+					else:
+						predicted_text = ""
 
-			print("Spejimas:" + predicted_text)
-			# Save cell data directly to the database
-			TableCell.objects.create(
-				table=uploaded_table,
-				column_number=(i % column_amount) + 1,
-				row_number=i // column_amount + 1,
-				ocr_text=predicted_text,
-				image=uploaded_file
-			)
+				uploaded_file = convert_to_inmemory_uploadedfile(image, f"cell_{uuid.uuid4()}.png")
 
-		# Optionally delete the original uploaded image if no longer needed
+				print("Spejimas:" + predicted_text)
+				# Save cell data directly to the database
+				TableCell.objects.create(
+					table=uploaded_table,
+					column_number=(i % int(uploaded_table.column_count)) + 1,
+					row_number=i // int(uploaded_table.column_count) + 1,
+					ocr_text=predicted_text,
+					image=uploaded_file
+				)
 
-		# Return the image URLs for rendering
-		return redirect('/history/' + str(uploaded_table.id) + '/cells/')
+			# Optionally delete the original uploaded image if no longer needed
 
-	return JsonResponse({"error": "Invalid request"}, status=400)
-# Create your views here.
+			# Return the image URLs for rendering
+			return redirect('/history/' + str(uploaded_table.id) + '/cells/')
+		else:
+			return JsonResponse({"error": "Invalid request"}, status=400)

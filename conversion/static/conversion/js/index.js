@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     const fileInput = document.querySelector('input[name="image"]');
+    const previewPlaceholder = document.getElementById('preview-placeholder');
 
     fileInput.addEventListener('change', function (event) {
         const previewImage = document.getElementById('preview-image');
         const file = event.target.files[0];
-        console.log("HERE")
 
         if (file) {
             if (!file.type.startsWith('image/')) {
