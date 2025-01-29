@@ -38,7 +38,7 @@ def index(request):
 			messages.success(request, 'Your password was successfully updated!')
 			return redirect('accountProfile')  # Replace with your actual profile page URL name
 		else:
-			messages.error(request, 'Please correct the error below.')
+			messages.error(request, 'You have invalid password changes.')
 	elif request.method == 'POST' and 'update_profile' in request.POST:
 		accountProfile_form = PersonalDataForm(request.POST, request.FILES, instance=user_profile)
 		password_form = CustomPasswordChangeForm(user)
@@ -51,7 +51,7 @@ def index(request):
 			messages.success(request, 'Your profile was successfully updated!')
 			return redirect('accountProfile')
 		else:
-			messages.error(request, 'Please correct the error below.')
+			messages.error(request, 'Your profile has invalid changes.')
 	else:
 		password_form = CustomPasswordChangeForm(user)
 		accountProfile_form = PersonalDataForm(
@@ -75,8 +75,7 @@ def index(request):
 			'userProfile': user_profile,
 			'password_form': password_form,
 			'accountProfile_form': accountProfile_form,
-			'dark': user_settings.darkMode
+			'dark': user_settings.darkMode,
+			'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None
 		}
 	)
-
-# Create your views here.

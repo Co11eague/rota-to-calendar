@@ -9,7 +9,7 @@
 
         {% if profile_picture %}
             <a href="{% url 'accountProfile' %}">
-                <img id="preview-image" src="{{ profile_picture }}" alt="Profile Image"
+                <img id="profile-preview-image" src="{{ profile_picture.url }}" alt="Profile Image"
                      class="object-cover w-12 h-12 rounded-full cursor-pointer border-2 border-gray-300 dark:border-gray-600 hover:border-gray-500 dark:hover:border-gray-400">
             </a>
         {% else %}

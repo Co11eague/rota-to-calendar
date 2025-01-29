@@ -9,10 +9,10 @@ from .models import Slider
 def index(request):
 	sliders = Slider.objects.all()  # Fetch all slider images
 	if request.user.is_authenticated:
-		profile_picture = UserProfile.objects.get(user=request.user).profile_picture
+		user_profile = UserProfile.objects.get(user=request.user)
 		dark = UserSettings.objects.get(user=request.user).darkMode
 
 	else:
-		profile_picture = None
+		user_profile = None
 		dark = False
-	return render(request, 'home/index.html', {'sliders': sliders, 'profile_picture': profile_picture.url, 'dark': dark})
+	return render(request, 'home/index.html', {'sliders': sliders, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None, 'dark': dark})

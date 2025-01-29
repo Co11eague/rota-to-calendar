@@ -7,28 +7,32 @@
     <title>ShiftMate</title>
     <link href="{% static 'home/css/output.css' %}" rel="stylesheet">
     <link rel="icon" href="../../../media/images/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
 <header class="bg-blue-600 text-white py-4 dark:bg-blue-800">
 </header>
 <body class="bg-gray-100 dark:bg-gray-900">
 {% if messages %}
-    <link rel="stylesheet" href="{% static 'home/css/base.css' %}">
+<script>
+    const isDarkMode = document.documentElement.classList.contains("dark");
 
-    <div class="toast-container">
+    document.addEventListener("DOMContentLoaded", function() {
         {% for message in messages %}
-            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true"
-                 data-delay="5000">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        {{ message }}
-                    </div>
-                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
-                            aria-label="Close"></button>
-                </div>
-            </div>
+            Toastify({
+                text: "{{ message }}",
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: isDarkMode
+                    ? "{% if message.tags == 'success' %}#16a34a{% elif message.tags == 'error' %}#b91c1c{% else %}#1e40af{% endif %}"
+                    : "{% if message.tags == 'success' %}#22c55e{% elif message.tags == 'error' %}#ef4444{% else %}#3b82f6{% endif %}",
+                close: true
+
+            }).showToast();
         {% endfor %}
-    </div>
-    <script src="{% static 'home/js/base.js' %}"></script>
+    });
+</script>
 {% endif %}
 
 </body>

@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from easyocr import easyocr
 
+from accountProfile.models import UserProfile
 from accountSettings.models import UserSettings
 from conversion.forms import ConversionForm
 from conversion.model import Model
@@ -135,8 +136,9 @@ def convert_to_inmemory_uploadedfile(image, name="cell_image.png"):
 def index(request):
 	user_settings = UserSettings.objects.get(user=request.user)
 	conversionForm = ConversionForm()
+	user_profile = UserProfile.objects.get(user=request.user)
 
-	return render(request, 'conversion/index.html', {'conversionForm': conversionForm, 'dark': user_settings.darkMode})
+	return render(request, 'conversion/index.html', {'conversionForm': conversionForm, 'dark': user_settings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 
 
 @login_required

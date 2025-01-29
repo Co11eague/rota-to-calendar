@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-
+from accountProfile.models import UserProfile
 from accountSettings.forms import SettingsForm
 from accountSettings.models import UserSettings
 
@@ -12,6 +12,7 @@ from accountSettings.models import UserSettings
 def index(request):
 	user = User.objects.get(id=request.user.id)
 	userSettings = UserSettings.objects.get(user=user)
+	user_profile = UserProfile.objects.get(user=user)
 
 	if request.method == 'POST':
 		settings_form = SettingsForm(request.POST, instance=userSettings)
@@ -23,5 +24,5 @@ def index(request):
 
 
 
-	return render(request, 'accountSettings/index.html', {'form': settings_form, 'dark': userSettings.darkMode})
+	return render(request, 'accountSettings/index.html', {'form': settings_form, 'dark': userSettings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 # Create your views here.
