@@ -1,5 +1,7 @@
 <!-- menu.html -->
-<nav class="relative border-gray-200 w-full border-b py-3 bg-white z-50  bg-inherit  border-b-default border-solid border-prime-gray-200 ">
+{% load static %}
+<script src="{% static 'home/js/menu.js' %}"></script>
+<nav class="relative border-gray-200 w-full border-b py-3 bg-white dark:bg-gray-900 z-50 border-b-default border-solid border-prime-gray-200 dark:border-gray-600">
     <div class="container mx-auto ">
         <div class="w-full flex  flex-col lg:flex-row">
             <div class=" flex justify-between items-center lg:flex-row">
@@ -7,7 +9,7 @@
                     <img width="164" height="33" fill="none" src="../../../media/images/logo.png" alt="ShiftMate"/>
                 </a>
                 <button data-collapse-toggle="megamenu-cta" type="button"
-                        class="mobile-button inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 "
+                        class="mobile-button inline-flex items-center p-2 ml-3 text-sm text-gray-500 dark:text-gray-400 rounded-lg lg:hidden hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-200"
                         aria-controls="navbar" aria-expanded="false">
                     <span class="sr-only">Open main menu</span>
                     <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
@@ -17,7 +19,7 @@
                               clip-rule="evenodd"></path>
                     </svg>
                 </button>
-                <h1 class="text-2xl font-bold text-gray-800 tracking-wide text-center">
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 tracking-wide text-center">
                     <a href="/">
                         <span class="text-blue-500">Shift</span><span class="text-green-500">Mate</span>
                     </a>
@@ -27,16 +29,16 @@
                 <ul class="flex lg:items-center gap-y-4 flex-col my-4 lg:my-0 lg:flex-row">
                     <li>
                         <a href="/"
-                           class="flex items-center justify-between text-gray-500 text-sm text-center lg:text-base font-medium hover:text-indigo-700 transition-all duration-500 mb-2 lg:mr-6 lg:mb-0 mr-auto lg:text-left lg:m-0">Home</a>
+                           class="flex items-center justify-between text-gray-500 dark:text-gray-400 text-sm text-center lg:text-base font-medium hover:text-indigo-700 transition-all duration-500 mb-2 lg:mr-6 lg:mb-0 mr-auto lg:text-left lg:m-0">Home</a>
                     </li>
                     <li>
                         <a href="{% url 'aboutus' %}"
-                           class="flex items-center justify-between text-gray-500 text-sm text-center lg:text-base font-medium hover:text-indigo-700 transition-all duration-500 mb-2 lg:mr-6 lg:mb-0 mr-auto lg:text-left  lg:m-0">About
+                           class="flex items-center justify-between text-gray-500 dark:text-gray-400 text-sm text-center lg:text-base font-medium hover:text-indigo-700 transition-all duration-500 mb-2 lg:mr-6 lg:mb-0 mr-auto lg:text-left  lg:m-0">About
                             us</a>
                     </li>
                     <li class="">
                         <button id="features-btn" data-target="full-width-megamenu"
-                                class="dropdown-toggle flex items-center justify-between text-gray-500 text-sm text-center lg:text-base font-medium hover:text-prime-blue-700 transition-all duration-500 mb-2 lg:mr-6 lg:mb-0 mr-auto lg:text-left  lg:m-0">
+                                class="dropdown-toggle dark:text-gray-400 flex items-center justify-between text-gray-500 text-sm text-center lg:text-base font-medium hover:text-prime-blue-700 transition-all duration-500 mb-2 lg:mr-6 lg:mb-0 mr-auto lg:text-left  lg:m-0">
                             Features
                             <svg class="w-3 h-2 ml-1.5 " width="10" height="6" viewBox="0 0 10 6" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -45,19 +47,17 @@
                                       stroke-linejoin="round"></path>
                             </svg>
                         </button>
-                        {% load static %}
-                        <script src="{% static 'home/js/menu.js' %}"></script>
 
                         <!-- Dropdown menu -->
                         <div id="features-dropdown" aria-labelledby="full-width-megamenu"
-                             class="dropdown-menu animate-fade z-10  lg:absolute top-full left-0 right-0 m-auto bg-white rounded-lg shadow-[0px_15px_30px_0px_rgba(16,24,40,0.1)] lg:px-10 xl:px-8 md:px-5 p-4 max-w-screen-2xl xl:py-8 lg:py-4 md:py-2l  hidden">
+                             class="dropdown-menu animate-fade z-10 dark:bg-gray-800 lg:absolute top-full left-0 right-0 m-auto bg-white rounded-lg shadow-[0px_15px_30px_0px_rgba(16,24,40,0.1)] lg:px-10 xl:px-8 md:px-5 p-4 max-w-screen-2xl xl:py-8 lg:py-4 md:py-2l  hidden">
                             <div class="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 justify-between ">
-                                <ul class="text-sm text-gray-700  " aria-labelledby="dropdownLargeButton">
-                                    <h6 class="font-medium text-sm text-gray-500 mb-2"> Features</h6>
+                                <ul class="text-sm text-gray-700 dark:text-gray-300 " aria-labelledby="dropdownLargeButton">
+                                    <h6 class="font-medium text-sm dark:text-gray-400 text-gray-500 mb-2"> Features</h6>
                                     <li class="">
                                         <a href="{% url 'conversion' %}"
                                            class="px-3 py-5 transition-all duration-500 hover:bg-gray-50 hover:rounded-xl flex items-center ">
-                                            <div class="bg-orange-50 rounded-lg w-12 h-12 flex items-center justify-center">
+                                            <div class="bg-orange-50 dark:bg-orange-700 rounded-lg w-12 h-12 flex items-center justify-center">
                                                 <svg width="38" height="38" viewBox="0 0 38 38" fill="none"
                                                      xmlns="http://www.w3.org/2000/svg">
                                                     <path opacity="0.3"
@@ -68,9 +68,9 @@
                                                 </svg>
                                             </div>
                                             <div class="ml-4 w-4/5">
-                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold">
+                                                <h5 class="text-gray-900 dark:text-gray-100 text-base mb-1.5 font-semibold">
                                                     Conversion</h5>
-                                                <p class="text-xs font-medium text-gray-400"> Upload your shift ROTA to
+                                                <p class="text-xs font-medium text-gray-400 dark:text-gray-300"> Upload your shift ROTA to
                                                     get it converted to a calendar file</p>
                                             </div>
                                         </a>
@@ -78,7 +78,7 @@
                                     <li class="">
                                         <a href="{% url 'creation' %}"
                                            class="px-3 py-5 hover:bg-gray-50 hover:rounded-xl flex items-center transition-all duration-500">
-                                            <div class="bg-emerald-50 rounded-lg w-12 h-12 flex items-center justify-center">
+                                            <div class="bg-emerald-50 dark:bg-emerald-700 rounded-lg w-12 h-12 flex items-center justify-center">
                                                 <svg width="38" height="38" viewBox="0 0 38 38" fill="none"
                                                      xmlns="http://www.w3.org/2000/svg">
                                                     <path opacity="0.3"
@@ -89,10 +89,10 @@
                                                 </svg>
                                             </div>
                                             <div class="ml-4 w-4/5">
-                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold"> ROTA Creation
-                                                    <span class="bg-indigo-50 text-indigo-500 text-xs font-medium mr-2 px-2.5 py-1 rounded-full h-5 ml-4">New</span>
+                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold dark:text-gray-100"> ROTA Creation
+                                                    <span class="bg-indigo-50 dark:bg-indigo-600 dark:text-indigo-300 text-indigo-500 text-xs font-medium mr-2 px-2.5 py-1 rounded-full h-5 ml-4">New</span>
                                                 </h5>
-                                                <p class="text-xs font-medium text-gray-400"> Create ROTAs for specific
+                                                <p class="text-xs font-medium text-gray-400 dark:text-gray-300"> Create ROTAs for specific
                                                     people in our in built calendar</p>
                                             </div>
                                         </a>
@@ -100,7 +100,7 @@
                                     <li class="">
                                         <a href="{% url 'history' %}"
                                            class="px-3 py-5 hover:bg-gray-50 hover:rounded-xl flex items-center transition-all duration-500">
-                                            <div class="bg-blue-50 rounded-lg w-12 h-12 flex items-center justify-center">
+                                            <div class="bg-blue-50 dark:bg-blue-700 rounded-lg w-12 h-12 flex items-center justify-center">
                                                 <svg width="38" height="38" viewBox="0 0 38 38" fill="none"
                                                      xmlns="http://www.w3.org/2000/svg">
                                                     <path opacity="0.3"
@@ -111,8 +111,8 @@
                                                 </svg>
                                             </div>
                                             <div class="ml-4 w-4/5">
-                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold"> History</h5>
-                                                <p class="text-xs font-medium text-gray-400"> See what ROTAs you had in
+                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold dark:text-gray-100"> History</h5>
+                                                <p class="text-xs font-medium text-gray-400 dark:text-gray-300"> See what ROTAs you had in
                                                     the past </p>
                                             </div>
                                         </a>
@@ -122,11 +122,11 @@
                                                       downloads</a></li><li><a href="javascript:;" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Billing</a></li><li><a href="javascript:;" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Rewards</a></li></ul></div></li> -->
                                 </ul>
                                 <ul class="text-sm text-gray-700 " aria-labelledby="dropdownLargeButton">
-                                    <h6 class="font-medium text-sm text-gray-500 mb-2"> Services</h6>
+                                    <h6 class="font-medium text-sm text-gray-500 mb-2 dark:text-gray-400"> Services</h6>
                                     <li class="">
                                         <a href="{% url 'accountProfile' %}"
                                            class="px-3 py-5 hover:bg-gray-50 hover:rounded-xl flex items-center transition-all duration-500">
-                                            <div class="bg-rose-50 rounded-lg w-12 h-12 flex items-center justify-center">
+                                            <div class="bg-rose-50 dark:bg-rose-700 rounded-lg w-12 h-12 flex items-center justify-center">
                                                 <svg width="38" height="38" viewBox="0 0 38 38" fill="none"
                                                      xmlns="http://www.w3.org/2000/svg">
                                                     <path opacity="0.3"
@@ -137,9 +137,9 @@
                                                 </svg>
                                             </div>
                                             <div class="ml-4 w-4/5">
-                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold"> Personal
+                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold dark:text-gray-100"> Personal
                                                     Account</h5>
-                                                <p class="text-xs font-medium text-gray-400"> Your personal account
+                                                <p class="text-xs font-medium text-gray-400 dark:text-gray-300"> Your personal account
                                                     ensures that none of the data is lost </p>
                                             </div>
                                         </a>
@@ -147,7 +147,7 @@
                                     <li class="">
                                         <a href="{% url 'accountSettings' %}"
                                            class="px-3 py-5 hover:bg-gray-50 hover:rounded-xl flex items-center transition-all duration-500">
-                                            <div class="bg-lime-50 rounded-lg w-12 h-12 flex items-center justify-center">
+                                            <div class="bg-lime-50 dark:bg-lime-700 rounded-lg w-12 h-12 flex items-center justify-center">
                                                 <svg width="38" height="38" viewBox="0 0 38 38" fill="none"
                                                      xmlns="http://www.w3.org/2000/svg">
                                                     <path opacity="0.3"
@@ -158,8 +158,8 @@
                                                 </svg>
                                             </div>
                                             <div class="ml-4 w-4/5">
-                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold"> Settings</h5>
-                                                <p class="text-xs font-medium text-gray-400"> Customise the website to
+                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold dark:text-gray-100"> Settings</h5>
+                                                <p class="text-xs font-medium text-gray-400 dark:text-gray-300"> Customise the website to
                                                     your specific needs </p>
                                             </div>
                                         </a>
@@ -170,12 +170,12 @@
                                                        downloads</a></li><li><a href="javascript:;" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Billing</a></li><li><a href="javascript:;" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Rewards</a></li></ul></div></li> -->
                                 </ul>
                                 <ul class="text-sm text-gray-700 " aria-labelledby="dropdownLargeButton">
-                                    <h6 class="font-medium text-sm text-gray-500 mb-2"> Support</h6>
+                                    <h6 class="font-medium text-sm text-gray-500 mb-2 dark:text-gray-400"> Support</h6>
 
                                     <li class="">
                                         <a href="{% url 'documentation' %}"
                                            class="px-3 py-5 hover:bg-gray-50 hover:rounded-xl flex items-center transition-all duration-500">
-                                            <div class="bg-indigo-50 rounded-lg w-12 h-12 flex items-center justify-center">
+                                            <div class="bg-indigo-50  dark:bg-indigo-700 rounded-lg w-12 h-12 flex items-center justify-center">
                                                 <svg width="38" height="38" viewBox="0 0 38 38" fill="none"
                                                      xmlns="http://www.w3.org/2000/svg">
                                                     <path opacity="0.3"
@@ -186,9 +186,9 @@
                                                 </svg>
                                             </div>
                                             <div class="ml-4 w-4/5">
-                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold">
+                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold dark:text-gray-100">
                                                     Documentation</h5>
-                                                <p class="text-xs font-medium text-gray-400"> Organized documentation
+                                                <p class="text-xs font-medium text-gray-400 dark:text-gray-300"> Organized documentation
                                                     will help you save tone of your time </p>
                                             </div>
                                         </a>
@@ -196,7 +196,7 @@
                                     <li class="">
                                         <a href="{% url 'getHelp' %}"
                                            class="px-3 py-5 hover:bg-gray-50 hover:rounded-xl flex items-center transition-all duration-500">
-                                            <div class="bg-purple-50 rounded-lg w-12 h-12 flex items-center justify-center">
+                                            <div class="bg-purple-50 dark:bg-purple-700 rounded-lg w-12 h-12 flex items-center justify-center">
                                                 <svg width="38" height="38" viewBox="0 0 38 38" fill="none"
                                                      xmlns="http://www.w3.org/2000/svg">
                                                     <path opacity="0.3"
@@ -207,8 +207,8 @@
                                                 </svg>
                                             </div>
                                             <div class="ml-4 w-4/5">
-                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold"> Get Help</h5>
-                                                <p class="text-xs font-medium text-gray-400"> Need help? our customer
+                                                <h5 class="text-gray-900 text-base mb-1.5 font-semibold dark:text-gray-100"> Get Help</h5>
+                                                <p class="text-xs font-medium text-gray-400 dark:text-gray-300"> Need help? our customer
                                                     support is here to help you anytime</p>
                                             </div>
                                         </a>
