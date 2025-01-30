@@ -1,151 +1,52 @@
 {% load scheduletags %}
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{% if dark %}dark{% endif %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShiftMate</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'creation/css/output.css' %}" rel="stylesheet">
     <link rel="icon" href="../../../media/images/logo.png" type="image/x-icon">
-
-    <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.css" rel="stylesheet">
-    <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js"></script>
-
+    <script src="{% static 'creation/js/index.js' %}"></script>
 </head>
-<body class="bg-gray-100">
-<header class="bg-blue-600 text-white py-4">
+<header class="bg-blue-600 text-white py-4 dark:bg-blue-800">
 </header>
+<body class="bg-gray-100 dark:bg-gray-900">
 {% include "home/menu.html" %}
 
-<h1>Shifts Calendar</h1>
-<button id="addEventBtn">Add Event</button>
-<div id="calendar"></div>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
 
-        // Initialize FullCalendar
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            events: '/creation/events/', // URL to fetch events
-            editable: true,             // Allow event drag-and-drop (optional)
-            selectable: true,           // Allow date selection (optional)
+<div class="container mx-auto mt-12 p-6 bg-white shadow-lg rounded-md mb-8 dark:bg-gray-800 dark:text-gray-200">
 
-            eventClick: function (info) {
-                // Gather the necessary data to be sent to the convert view
-                var eventTitle = info.event.title;
-                var eventStart = info.event.start;
-                var eventEnd = info.event.end;
-                var eventLocation = info.event.extendedProps.location;
+    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center mb-4">
+        Shifts Calendar</h1>
 
-                console.log(eventEnd)
+    <button class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition dark:bg-blue-700 dark:hover:bg-blue-600"
+            id="addEventBtn">Add Event
+    </button>
+    <div class="py-4 relative flex justify-center ">
+        <div id="eventModal"
+             class="absolute inset-0 hidden flex justify-center z-[9999]">
+            <form method="post" class="bg-gray-800 p-6 rounded-lg w-96 z-50 max-w-sm mx-auto text-white dark:bg-gray-700 dark:text-gray-200">
+                {% csrf_token %}
+                <h2 class="text-lg font-bold mb-4">Add Shift</h2>
 
-                var eventStartDate = eventStart.toISOString().split('T')[0];  // Extract the date part
-                var eventEndDate = eventEnd.toISOString().split('T')[0];      // Extract the date part
-                var eventStartTime = eventStart.toTimeString().split(' ')[0].substring(0, 5);  // HH:MM format
-                var eventEndTime = eventEnd.toTimeString().split(' ')[0].substring(0, 5);    // HH:MM format
+                {% for field in event_form %}
+                    {{ field.label }}
+                    {{ field }}
+                {% endfor %}
+                <div class="flex justify-end space-x-2 mt-4">
+                    <button id="cancelEventBtn" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+                    <button id="saveEventBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+                </div>
+            </form>
+        </div>
+        <div id="calendar" class="w-full h-full"></div>
+    </div>
 
-                // Prepare the POST data
-                var data = new FormData();
-                data.append("Name", eventTitle);
-                data.append("Location", eventLocation);
-                data.append("Start Date", eventStartDate);
-                data.append("End Date", eventEndDate);
-                data.append("Start Time", eventStartTime);
-                data.append("End Time", eventEndTime);
-                data.append("action", "convert");
-
-                // Make the POST request to trigger ICS file download
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/history/calendar-convert/", true);
-                xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        // If successful, this should initiate download of the .ics file
-                        var blob = xhr.response;
-                        var downloadUrl = window.URL.createObjectURL(blob);
-                        var a = document.createElement('a');
-                        a.href = downloadUrl;
-                        a.download = `${eventTitle.replace(" ", "_")}_event.ics`;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                    } else {
-                        console.error('Failed to generate ICS file.');
-                    }
-                };
-                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-                xhr.responseType = 'blob';  // Ensure the response is treated as a file (blob)
-                xhr.send(data);
-            },
-
-            select: function (info) {
-                var title = prompt("Enter event title:");
-                if (title) {
-                    calendar.addEvent({
-                        title: title,
-                        start: info.startStr,
-                        end: info.endStr,
-                        allDay: info.allDay
-                    });
-                    // Now save the event in the database (server-side)
-                    fetch('/creation/add_event/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded', // Correct content type
-                        },
-                        body: `title=${title}&start=${info.startStr}&end=${info.endStr}`,
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                console.log('Event added successfully!');
-                            } else {
-                                console.log('Failed to add event.');
-                            }
-                        });
-                }
-
-
-                calendar.unselect(); // Unselect the date after creating the event
-            }
-
-        });
-
-        document.getElementById('addEventBtn').addEventListener('click', function () {
-            var title = prompt("Enter event title:");
-            var startDate = prompt("Enter event start date and time (YYYY-MM-DDTHH:MM):");
-            var endDate = prompt("Enter event end date and time (YYYY-MM-DDTHH:MM):");
-
-            if (title && startDate && endDate) {
-                // Add the event to the calendar
-                calendar.addEvent({
-                    title: title,
-                    start: startDate,
-                    end: endDate
-                });
-
-                fetch('/creation/add_event/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded', // Correct content type
-                    },
-                    body: `title=${title}&start=${startDate}&end=${endDate}`,
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            console.log('Event added successfully!');
-                        } else {
-                            console.log('Failed to add event.');
-                        }
-                    });
-            }
-        });
-        calendar.render(); // Render the calendar
-    });
-</script>
+</div>
 </body>
 
 </html>

@@ -5,14 +5,19 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from schedule.models import Calendar
-from schedule.models import Event  # Assuming you're using django-scheduler's Event model
+from schedule.models import Event
+
+from accountProfile.models import UserProfile
+from accountSettings.models import UserSettings
+from creation.forms import EventForm
 
 
 @login_required
 def index(request):
-	return render(request, 'creation/index.html')
-
-
+	user_settings = UserSettings.objects.get(user=request.user)
+	user_profile = UserProfile.objects.get(user=request.user)
+	event_form = EventForm()
+	return render(request, 'creation/index.html', {'event_form': event_form, 'dark': user_settings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 # Create your views here.
 
 def user_events(request):
@@ -42,6 +47,7 @@ def add_event(request):
 			title=title,
 			start=start_time,
 			end=end_time,
+			description=request.POST.get('description'),
 			creator=request.user,  # Use the logged-in user as the event creator
 			calendar=calendar  # Or your default calendar
 		)
