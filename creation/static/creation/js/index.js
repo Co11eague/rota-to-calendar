@@ -3,6 +3,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const eventModal = document.getElementById('eventModal');
     const openModalBtn = document.getElementById("addEventBtn"); // Update with your button ID
     const closeModalBtn = document.getElementById("cancelEventBtn");
+    const overlay = document.getElementById('overlay');
+    const form = document.getElementById('add-shift');
+
+    var startField = form.querySelector("[name='start']");
+    var endField = form.querySelector("[name='end']");
+
 
 
     // Initialize FullCalendar
@@ -13,28 +19,29 @@ document.addEventListener('DOMContentLoaded', function () {
         selectable: true,           // Allow date selection (optional)
 
         eventClick: function (info) {
-            // Gather the necessary data to be sent to the convert view
+
             var eventTitle = info.event.title;
             var eventStart = info.event.start;
             var eventEnd = info.event.end;
-            var eventLocation = info.event.extendedProps.location;
+            var eventDescription = info.event.description;
 
             console.log(eventEnd)
 
-            var eventStartDate = eventStart.toISOString().split('T')[0];  // Extract the date part
-            var eventEndDate = eventEnd.toISOString().split('T')[0];      // Extract the date part
-            var eventStartTime = eventStart.toTimeString().split(' ')[0].substring(0, 5);  // HH:MM format
-            var eventEndTime = eventEnd.toTimeString().split(' ')[0].substring(0, 5);    // HH:MM format
+            var eventStartDate = eventStart.toISOString().split('T')[0];
+            var eventEndDate = eventEnd.toISOString().split('T')[0];
+            var eventStartTime = eventStart.toTimeString().split(' ')[0].substring(0, 5);
+            var eventEndTime = eventEnd.toTimeString().split(' ')[0].substring(0, 5);
 
             // Prepare the POST data
             var data = new FormData();
             data.append("Name", eventTitle);
-            data.append("Location", eventLocation);
+            data.append("Location", null);
+            data.append("Description", eventDescription)
             data.append("Start Date", eventStartDate);
             data.append("End Date", eventEndDate);
             data.append("Start Time", eventStartTime);
             data.append("End Time", eventEndTime);
-            data.append("action", "convert");
+            data.append("action", "convert+");
 
             // Make the POST request to trigger ICS file download
             var xhr = new XMLHttpRequest();
@@ -60,33 +67,26 @@ document.addEventListener('DOMContentLoaded', function () {
         },
 
         select: function (info) {
-            var title = prompt("Enter event title:");
-            if (title) {
-                calendar.addEvent({
-                    title: title,
-                    start: info.startStr,
-                    end: info.endStr,
-                    allDay: info.allDay
-                });
-                // Now save the event in the database (server-side)
-                fetch('/creation/add_event/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded', // Correct content type
-                    },
-                    body: `title=${title}&start=${info.startStr}&end=${info.endStr}`,
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            console.log('Event added successfully!');
-                        } else {
-                            console.log('Failed to add event.');
-                        }
-                    });
-            }
+            openModal()
 
+            var eventStart = info.event.start;
+            var eventEnd = info.event.end;
 
+            // Convert the event start time to the format 'YYYY-MM-DDTHH:MM'
+            var startDate = eventStart.toISOString().split('T')[0];  // 'YYYY-MM-DD'
+            var startTime = eventStart.toTimeString().split(' ')[0].substring(0, 5);  // 'HH:MM'
+
+            var endDate = eventEnd.toISOString().split('T')[0];  // 'YYYY-MM-DD'
+            var endTime = eventEnd.toTimeString().split(' ')[0].substring(0, 5);  // 'HH:MM'
+
+            // Combine date and time to get the 'YYYY-MM-DDTHH:MM' format
+            var startDateTime = startDate + "T" + startTime;
+            var endDateTime = endDate + "T" + endTime;
+
+            startField.value = startDateTime
+            endField.value = endDateTime
+
+            form.submit()
             calendar.unselect(); // Unselect the date after creating the event
         }
 
@@ -96,51 +96,20 @@ document.addEventListener('DOMContentLoaded', function () {
         eventModal.classList.remove('hidden');
         document.body.style.pointerEvents = "none";
         eventModal.style.pointerEvents = "auto";
+                    overlay.classList.remove('hidden');
+
     }
 
     function closeModal() {
         eventModal.classList.add("hidden");
         document.body.style.pointerEvents = "auto";
+                    overlay.classList.add('hidden');
+
 
     }
 
     openModalBtn.addEventListener("click", openModal);
     closeModalBtn.addEventListener("click", closeModal);
 
-
-    document.getElementById('addEventBtn').addEventListener('click', function () {
-
-        eventModal.classList.remove('hidden');
-        document.body.style.pointerEvents = "none";
-
-        // var title = prompt("Enter event title:");
-        // var startDate = prompt("Enter event start date and time (YYYY-MM-DDTHH:MM):");
-        // var endDate = prompt("Enter event end date and time (YYYY-MM-DDTHH:MM):");
-        //
-        // if (title && startDate && endDate) {
-        //     // Add the event to the calendar
-        //     calendar.addEvent({
-        //         title: title,
-        //         start: startDate,
-        //         end: endDate
-        //     });
-        //
-        //     fetch('/creation/add_event/', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/x-www-form-urlencoded', // Correct content type
-        //         },
-        //         body: `title=${title}&start=${startDate}&end=${endDate}`,
-        //     })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             if (data.success) {
-        //                 console.log('Event added successfully!');
-        //             } else {
-        //                 console.log('Failed to add event.');
-        //             }
-        //         });
-        // }
-    });
     calendar.render(); // Render the calendar
 });

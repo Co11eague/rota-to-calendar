@@ -1,8 +1,9 @@
 from datetime import datetime
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from schedule.models import Calendar
 from schedule.models import Event
@@ -29,27 +30,21 @@ def user_events(request):
 	return JsonResponse([], safe=False)
 
 
-@csrf_exempt  # Disable CSRF protection for this POST request (in a production app, use a valid CSRF token)
 def add_event(request):
 	if request.method == 'POST' and request.user.is_authenticated:
-		title = request.POST.get('title')
-		start_time = request.POST.get('start')
-		end_time = request.POST.get('end')
+		event_form = EventForm(request.POST)
 
-		# Convert start and end times to datetime objects
-		start_time = datetime.fromisoformat(start_time)
-		end_time = datetime.fromisoformat(end_time)
+		if event_form.is_valid():
+			event = event_form.save(commit=False)
 
-		calendar = get_object_or_404(Calendar, slug="shifts-calendar")
+			calendar = get_object_or_404(Calendar, slug="shifts-calendar")
 
-		# Save the event to the database
-		event = Event.objects.create(
-			title=title,
-			start=start_time,
-			end=end_time,
-			description=request.POST.get('description'),
-			creator=request.user,  # Use the logged-in user as the event creator
-			calendar=calendar  # Or your default calendar
-		)
-		return JsonResponse({'success': True, 'event_id': event.id})
-	return JsonResponse({'success': False}, status=400)
+			event.creator = request.user
+			event.calendar = calendar
+			event.save()
+
+			messages.success(request, 'Your shift was successfully added!')
+		else:
+			messages.error(request, 'There was an input issue adding your shift.')
+	return redirect("creation")
+

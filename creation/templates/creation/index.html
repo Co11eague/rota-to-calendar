@@ -11,10 +11,33 @@
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js"></script>
     <script src="{% static 'creation/js/index.js' %}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
 <header class="bg-blue-600 text-white py-4 dark:bg-blue-800">
 </header>
 <body class="bg-gray-100 dark:bg-gray-900">
+{% if messages %}
+<script>
+    const isDarkMode = document.documentElement.classList.contains("dark");
+
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for message in messages %}
+            Toastify({
+                text: "{{ message }}",
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: isDarkMode
+                    ? "{% if message.tags == 'success' %}#16a34a{% elif message.tags == 'error' %}#b91c1c{% else %}#1e40af{% endif %}"
+                    : "{% if message.tags == 'success' %}#22c55e{% elif message.tags == 'error' %}#ef4444{% else %}#3b82f6{% endif %}",
+                close: true
+
+            }).showToast();
+        {% endfor %}
+    });
+</script>
+{% endif %}
 {% include "home/menu.html" %}
 
 
@@ -28,16 +51,17 @@
     </button>
     <div class="py-4 relative flex justify-center ">
         <div id="eventModal"
-             class="absolute inset-0 hidden flex justify-center z-[9999]">
-            <form method="post" class="bg-gray-800 p-6 rounded-lg w-96 z-50 max-w-sm mx-auto text-white dark:bg-gray-700 dark:text-gray-200">
+             class="absolute hidden flex justify-center z-[9999]">
+            <form method="post" action="/creation/add_event/" id="add-shift"
+                  class="space-y-2 bg-gray-800 p-6 rounded-lg w-96 z-50 max-w-sm mx-auto text-white dark:bg-gray-700 dark:text-gray-200">
                 {% csrf_token %}
                 <h2 class="text-lg font-bold mb-4">Add Shift</h2>
 
                 {% for field in event_form %}
-                    {{ field.label }}
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ field.label }}</label>
                     {{ field }}
                 {% endfor %}
-                <div class="flex justify-end space-x-2 mt-4">
+                <div class="flex justify-end space-x-2 !mt-6">
                     <button id="cancelEventBtn" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
                     <button id="saveEventBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
                 </div>
@@ -45,6 +69,9 @@
         </div>
         <div id="calendar" class="w-full h-full"></div>
     </div>
+
+    <div id="overlay" class="fixed hidden inset-0 bg-black bg-opacity-50 z-[9998]"></div>
+
 
 </div>
 </body>

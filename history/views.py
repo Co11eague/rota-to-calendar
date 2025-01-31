@@ -50,7 +50,8 @@ def convert(request):
 				status=400)
 
 		saveToCalendar = UserSettings.objects.get(user=request.user).saveToCalendar
-		if saveToCalendar:
+		if saveToCalendar and action == 'convert+':
+			action="convert"
 			calendar = get_object_or_404(LocalCalendar, slug="shifts-calendar")
 
 			# Save the event to the database
