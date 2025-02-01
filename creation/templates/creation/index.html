@@ -53,9 +53,9 @@
         <div id="eventModal"
              class="absolute hidden flex justify-center z-[9999]">
             <form method="post" action="/creation/add_event/" id="add-shift"
-                  class="space-y-2 bg-gray-800 p-6 rounded-lg w-96 z-50 max-w-sm mx-auto text-white dark:bg-gray-700 dark:text-gray-200">
+                  class="space-y-2 bg-white p-6 rounded-lg w-96 z-50 max-w-sm mx-auto text-white dark:bg-gray-700 dark:text-gray-200">
                 {% csrf_token %}
-                <h2 class="text-lg font-bold mb-4">Add Shift</h2>
+                <h2 class="text-lg font-bold mb-4 text-black dark:text-white">Add Shift</h2>
 
                 {% for field in event_form %}
                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ field.label }}</label>

@@ -69,24 +69,16 @@ document.addEventListener('DOMContentLoaded', function () {
         select: function (info) {
             openModal()
 
-            var eventStart = info.event.start;
-            var eventEnd = info.event.end;
-
-            // Convert the event start time to the format 'YYYY-MM-DDTHH:MM'
-            var startDate = eventStart.toISOString().split('T')[0];  // 'YYYY-MM-DD'
-            var startTime = eventStart.toTimeString().split(' ')[0].substring(0, 5);  // 'HH:MM'
-
-            var endDate = eventEnd.toISOString().split('T')[0];  // 'YYYY-MM-DD'
-            var endTime = eventEnd.toTimeString().split(' ')[0].substring(0, 5);  // 'HH:MM'
+            var eventStart = info.startStr;
+            var eventEnd = info.endStr;
 
             // Combine date and time to get the 'YYYY-MM-DDTHH:MM' format
-            var startDateTime = startDate + "T" + startTime;
-            var endDateTime = endDate + "T" + endTime;
+            var startDateTime = eventStart + "T" + "12:00";
+            var endDateTime = eventEnd + "T" + "12:00";
 
             startField.value = startDateTime
             endField.value = endDateTime
 
-            form.submit()
             calendar.unselect(); // Unselect the date after creating the event
         }
 
