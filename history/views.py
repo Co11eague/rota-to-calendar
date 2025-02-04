@@ -2,6 +2,8 @@ import urllib.parse
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -9,14 +11,39 @@ from ics import Calendar, Event
 from schedule.models import Calendar as LocalCalendar
 from schedule.models import Event as LocalEvent  # Assuming you're using django-scheduler's Event model
 
+from accountProfile.models import UserProfile
 from accountSettings.models import UserSettings
 from conversion.models import UploadedTable, TableCell
 
 
 @login_required
 def index(request):
-	tables = UploadedTable.objects.all()
-	return render(request, 'history/index.html', {'tables': tables})
+
+	VALID_SORT_FIELDS = ["title", "uploaded_at", "-uploaded_at", "date", "-date"]
+
+	sort = request.GET.get("sort", "-uploaded_at")
+	search = request.GET.get("search", "").strip()
+
+	if sort not in VALID_SORT_FIELDS:
+		sort = "-uploaded_at"
+
+	tables = UploadedTable.objects.filter(user=request.user)
+
+	if search:
+		tables = tables.filter(
+			Q(title__icontains=search))
+
+	tables = tables.order_by(sort)
+
+	paginator = Paginator(tables, 9)
+	page_number = request.GET.get("page")
+	page_obj = paginator.get_page(page_number)
+
+
+	user_settings = UserSettings.objects.get(user=request.user)
+	user_profile = UserProfile.objects.get(user=request.user)
+
+	return render(request, 'history/index.html', {"search": search, "sort": sort, "page_obj": page_obj, 'dark': user_settings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 
 
 @login_required
@@ -24,9 +51,11 @@ def index(request):
 def view_cells(request, table_id):
 	# Fetch the selected table
 	table = get_object_or_404(UploadedTable, id=table_id)
+	user_settings = UserSettings.objects.get(user=request.user)
+	user_profile = UserProfile.objects.get(user=request.user)
 	# Fetch all cells related to this table
 	cells = TableCell.objects.filter(table=table)
-	return render(request, 'history/view_cells.html', {'table': table, 'cells': cells})
+	return render(request, 'history/view_cells.html', {'table': table, 'cells': cells, 'dark': user_settings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 
 
 @csrf_exempt
