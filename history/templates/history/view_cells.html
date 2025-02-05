@@ -7,6 +7,7 @@
     <title>ShiftMate</title>
     <link rel="icon" href="../../../media/images/logo.png" type="image/x-icon">
     <link href="{% static 'history/css/output.css' %}" rel="stylesheet">
+    <script src="{% static 'history/js/index.js' %}"></script>
 </head>
 <header class="bg-blue-600 text-white py-4 dark:bg-blue-800">
 </header>
@@ -14,134 +15,125 @@
 {% include "home/menu.html" %}
 
 <div class="container mx-auto p-4">
-    <h2 class="text-xl text-center mb-4">Table Image</h2>
+
+    <h1 class="text-2xl font-bold mb-4 text-center dark:text-white">{{ table.title }}</h1>
     <div class="flex justify-center mb-8">
         <img src="{{ table.image.url }}" alt="Table Image" class="w-1/2 object-contain rounded-md">
     </div>
 
-    <h2 class="text-xl text-center my-4">Table Cells</h2>
+    <h1 class="text-2xl font-bold mb-4 text-center dark:text-white">Extracted ROTA data</h1>
     <!-- Dynamic Grid -->
-    <div class="grid gap-4 mb-8" style="grid-template-columns: repeat({{ columns }}, auto);">
-    {% for cell in cells %}
-            <div class="cell bg-white p-4 rounded-lg shadow-lg cursor-pointer flex" data-text="{{ cell.ocr_text }}"
-                 data-row="{{ cell.row_number }}" data-col="{{ cell.column_number }}">
+    <div class="container mx-auto mt-6 p-6 bg-white shadow-lg rounded-md mb-8 dark:bg-gray-800 dark:text-gray-200 justify-center">
 
-                <!-- Left Button Group -->
-                <div class="flex flex-col items-center space-y-2 left-buttons mr-4" style="visibility: hidden;">
-                    <button id="name" type="button"
-                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Name
-                    </button>
-                    <button id="start-time" type="button"
-                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Start Time
-                    </button>
-                    <button id="start-date" type="button"
-                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Start Date
-                    </button>
-                </div>
+        <div class="grid gap-4 mb-8" style="grid-template-columns: repeat({{ columns }}, auto);">
+            <div id="eventModal" class="absolute hidden flex justify-center items-center z-[9999] ">
+                <div class="space-y-2 bg-white p-6 rounded-lg w-96 z-50 max-w-sm mx-auto text-white dark:bg-gray-700 dark:text-gray-200">
+                    <h2 class="text-lg font-bold mb-4 text-black dark:text-white">Insert into the calendar</h2>
+                    <div class="flex justify-between items-center">
 
-                <!-- Content Section (Text and OCR Info) -->
-                <div class="text-left p-2 flex flex-col justify-center items-center flex-grow">
-                    <img src="{{ cell.image.url }}" alt="Cell Image"
-                         class="w-full max-w-screen-lg object-contain rounded-md">
-                    <p><strong>OCR Text:</strong></p>
-                    <p class="text-gray-600">{{ cell.ocr_text }}</p>
-                </div>
+                        <!-- Left Button Group -->
+                        <div class="flex flex-col items-center space-y-2 left-buttons mr-4">
+                            <button id="name" type="button"
+                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Title
+                            </button>
+                            <button id="start-time" type="button"
+                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Start time
+                            </button>
+                            <button id="start-date" type="button"
+                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Start date
+                            </button>
+                        </div>
 
-                <!-- Right Button Group -->
-                <div class="flex flex-col items-center space-y-2 right-buttons ml-4" style="visibility: hidden;">
-                    <button id="location" type="button"
-                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Location
-                    </button>
-                    <button id="end-time" type="button"
-                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">End Time
-                    </button>
-                    <button id="end-date" type="button"
-                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">End Date
-                    </button>
+                        <!-- Content Section (Text and OCR Info) -->
+                        <div class="text-left p-2 flex flex-col justify-center items-center flex-grow">
+                            <img src="{{ cell.image.url }}" alt="Cell Image"
+                                 class="w-full max-w-screen-lg object-contain rounded-md">
+                            <p><strong>OCR Text:</strong></p>
+                            <p class="text-gray-600">{{ cell.ocr_text }}</p>
+                        </div>
+
+                        <!-- Right Button Group -->
+                        <div class="flex flex-col items-center space-y-2 right-buttons ml-4">
+                            <button id="location" type="button"
+                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Location
+                            </button>
+                            <button id="end-time" type="button"
+                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">End time
+                            </button>
+                            <button id="end-date" type="button"
+                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">End date
+                            </button>
+                        </div>
+                    </div>
+                                            <div class="flex justify-end space-x-2 !mt-6">
+                            <button id="cancelEventBtn" class="bg-gray-500 dark:bg-gray-400 text-white px-4 py-2 rounded w-full">Cancel
+                            </button>
+                        </div>
                 </div>
+            </div>
+            {% for cell in cells %}
+                <div class="cell border bg-gray-50 overflow-hidden dark:bg-gray-700  justify-center items-center p-4 rounded-lg shadow-lg cursor-pointer flex"
+                     data-text="{{ cell.ocr_text }}"
+                     data-row="{{ cell.row_number }}" data-col="{{ cell.column_number }}">
+                    <!-- Content Section (Text and OCR Info) -->
+                    <div class="text-left p-2 flex flex-col justify-center items-center flex-grow">
+                        <img src="{{ cell.image.url }}" alt="Cell Image"
+                             class="w-full max-w-screen-lg object-contain rounded-md">
+                        <p class="block mt-2 text-sm font-medium text-gray-900 dark:text-gray-300">Extracted data:</p>
+                        <p class="text-gray-600 dark:text-gray-300 mt-2 p-2 bg-gray-100 dark:bg-gray-600 rounded-md text-base font-semibold break-words overflow-hidden max-w-full truncate">{{ cell.ocr_text }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <!-- Form for Calendar Data -->
+        <form method="post" enctype="multipart/form-data" action="/history/calendar-convert/" id="conversion-form"
+              class="bg-white p-4 rounded-lg shadow-lg">
+            {% csrf_token %}
+            <h3 class="text-lg mb-4">Selected Data:</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <label>
+                    <strong>Name:</strong>
+                    <input id="name-input" name="Name" type="text" class="w-full border border-gray-300 rounded p-2">
+                </label>
+                <label>
+                    <strong>Location:</strong>
+                    <input id="location-input" name="Location" type="text"
+                           class="w-full border border-gray-300 rounded p-2">
+                </label>
+                <label>
+                    <strong>Start Date:</strong>
+                    <input id="start-date-input" name="Start Date" type="text"
+                           class="w-full border border-gray-300 rounded p-2">
+                </label>
+                <label>
+                    <strong>End Date:</strong>
+                    <input id="end-date-input" name="End Date" type="text"
+                           class="w-full border border-gray-300 rounded p-2">
+                </label>
+                <label>
+                    <strong>Start Time:</strong>
+                    <input id="start-time-input" name="Start Time" type="text"
+                           class="w-full border border-gray-300 rounded p-2">
+                </label>
+                <label>
+                    <strong>End Time:</strong>
+                    <input id="end-time-input" name="End Time" type="text"
+                           class="w-full border border-gray-300 rounded p-2">
+                </label>
 
             </div>
-        {% endfor %}
+            <button name="action" value="convert" type="submit"
+                    class="bg-blue-600 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700">
+                Convert to Calendar (.ics)
+            </button>
+            <button name="action" value="google" type="submit"
+                    class="bg-green-600 text-white px-4 py-2 mt-4 rounded hover:bg-green-700">
+                Open in Google Calendar
+            </button>
+        </form>
     </div>
-    <script>
+    <div id="overlay" class="fixed hidden inset-0 bg-black bg-opacity-50 z-[9998]"></div>
 
-        document.querySelectorAll(".cell").forEach(cell => {
-            cell.addEventListener("click", () => {
-                console.log("Cell clicked!");
-                const leftButtons = cell.querySelector(".left-buttons");
-                const rightButtons = cell.querySelector(".right-buttons");
-
-                // Toggle visibility of the buttons
-                leftButtons.style.visibility = leftButtons.style.visibility === "hidden" ? "visible" : "hidden";
-                rightButtons.style.visibility = rightButtons.style.visibility === "hidden" ? "visible" : "hidden";
-            });
-        });
-        const populateInput = (buttonId, inputId) => {
-            const buttons = document.querySelectorAll(`#${buttonId}`);
-            buttons.forEach(button => {
-                button.addEventListener("click", () => {
-                    const cell = button.closest('.cell');  // Find the .cell element containing this button
-                    const ocrText = cell.getAttribute('data-text');  // Get the OCR text from the data-text attribute
-                    document.querySelector(`#${inputId}`).value = ocrText;  // Populate the corresponding input field
-                });
-            });
-        };
-
-        // Call the function for each button/input pairing
-        populateInput("name", "name-input");
-        populateInput("start-time", "start-time-input");
-        populateInput("start-date", "start-date-input");
-        populateInput("location", "location-input");
-        populateInput("end-time", "end-time-input");
-        populateInput("end-date", "end-date-input");
-    </script>
-
-    <!-- Form for Calendar Data -->
-    <form method="post" enctype="multipart/form-data" action="/history/calendar-convert/" id="conversion-form"
-          class="bg-white p-4 rounded-lg shadow-lg">
-        {% csrf_token %}
-        <h3 class="text-lg mb-4">Selected Data:</h3>
-        <div class="grid grid-cols-2 gap-4">
-            <label>
-                <strong>Name:</strong>
-                <input id="name-input" name="Name" type="text" class="w-full border border-gray-300 rounded p-2">
-            </label>
-            <label>
-                <strong>Location:</strong>
-                <input id="location-input" name="Location" type="text"
-                       class="w-full border border-gray-300 rounded p-2">
-            </label>
-            <label>
-                <strong>Start Date:</strong>
-                <input id="start-date-input" name="Start Date" type="text"
-                       class="w-full border border-gray-300 rounded p-2">
-            </label>
-            <label>
-                <strong>End Date:</strong>
-                <input id="end-date-input" name="End Date" type="text"
-                       class="w-full border border-gray-300 rounded p-2">
-            </label>
-            <label>
-                <strong>Start Time:</strong>
-                <input id="start-time-input" name="Start Time" type="text"
-                       class="w-full border border-gray-300 rounded p-2">
-            </label>
-            <label>
-                <strong>End Time:</strong>
-                <input id="end-time-input" name="End Time" type="text"
-                       class="w-full border border-gray-300 rounded p-2">
-            </label>
-
-        </div>
-        <button name="action" value="convert" type="submit"
-                class="bg-blue-600 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700">
-            Convert to Calendar (.ics)
-        </button>
-        <button name="action" value="google" type="submit"
-                class="bg-green-600 text-white px-4 py-2 mt-4 rounded hover:bg-green-700">
-            Open in Google Calendar
-        </button>
-    </form>
 </div>
 </body>
 </html>
