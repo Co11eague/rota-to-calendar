@@ -21,8 +21,8 @@
 
     <h2 class="text-xl text-center my-4">Table Cells</h2>
     <!-- Dynamic Grid -->
-    <div class="grid gap-4 mb-8" style="grid-template-columns: repeat({{ table.column_count }}, auto);">
-        {% for cell in cells %}
+    <div class="grid gap-4 mb-8" style="grid-template-columns: repeat({{ columns }}, auto);">
+    {% for cell in cells %}
             <div class="cell bg-white p-4 rounded-lg shadow-lg cursor-pointer flex" data-text="{{ cell.ocr_text }}"
                  data-row="{{ cell.row_number }}" data-col="{{ cell.column_number }}">
 

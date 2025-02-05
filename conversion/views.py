@@ -159,48 +159,47 @@ def process_table_image(request):
 			uploaded_image_path = uploaded_table.image.path  # Local file path of the image
 
 			# Process the table into a matrix (assuming you have a function for this)
-			table_list = split_table_into_list(uploaded_image_path)
+			table_matrix = split_table_into_list(uploaded_image_path)
+
+
 
 			reader = easyocr.Reader(['en'])
 
-			# Save each cell image using FileSystemStorage
-			saved_image_urls = []
-			for i, image in enumerate(table_list):
-				_, cell_buffer = cv2.imencode('.png', image)  # Convert to PNG format for storage
+			for i, row in enumerate(table_matrix):
+				for j, image in enumerate(row):
+					_, cell_buffer = cv2.imencode('.png', image)  # Convert to PNG format for storage
 
-				# Prepare the PIL image for OCR preprocessing
-				pil_image = Image.open(BytesIO(cell_buffer.tobytes()))
-				_, image_buffer = cv2.imencode('.png', image)
+					# Prepare the PIL image for OCR preprocessing
+					pil_image = Image.open(BytesIO(cell_buffer.tobytes()))
+					_, image_buffer = cv2.imencode('.png', image)
 
-				ocrMode = UserSettings.objects.get(user=request.user).ocrRecognition
+					ocrMode = UserSettings.objects.get(user=request.user).ocrRecognition
 
-				if ocrMode == "native":
-					predicted_text = run_ocr_on_image(pil_image)
-				else:
-					result = reader.readtext(image)
-
-					if result:
-						best_prediction = max(result, key=lambda x: x[2])
-						bbox, text, confidence = best_prediction
-						predicted_text = text
+					if ocrMode == "native":
+						predicted_text = run_ocr_on_image(pil_image)
 					else:
-						predicted_text = ""
+						result = reader.readtext(image)
 
-				uploaded_file = convert_to_inmemory_uploadedfile(image, f"cell_{uuid.uuid4()}.png")
+						if result:
+							best_prediction = max(result, key=lambda x: x[2])
+							bbox, text, confidence = best_prediction
+							predicted_text = text
+						else:
+							predicted_text = ""
 
-				print("Spejimas:" + predicted_text)
-				# Save cell data directly to the database
-				TableCell.objects.create(
-					table=uploaded_table,
-					column_number=(i % int(uploaded_table.column_count)) + 1,
-					row_number=i // int(uploaded_table.column_count) + 1,
-					ocr_text=predicted_text,
-					image=uploaded_file
-				)
+					uploaded_file = convert_to_inmemory_uploadedfile(image, f"cell_{uuid.uuid4()}.png")
 
-			# Optionally delete the original uploaded image if no longer needed
+					# Save cell data directly to the database
+					TableCell.objects.create(
+						table=uploaded_table,
+						column_number=j,
+						row_number=i,
+						ocr_text=predicted_text,
+						image=uploaded_file
+					)
 
-			# Return the image URLs for rendering
+				# Optionally delete the original uploaded image if no longer needed
+
+				# Return the image URLs for rendering
+
 			return redirect('/history/' + str(uploaded_table.id) + '/cells/')
-		else:
-			return JsonResponse({"error": "Invalid request"}, status=400)

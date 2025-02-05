@@ -1,9 +1,10 @@
 import urllib.parse
 from datetime import datetime
 
+from django import template
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -55,7 +56,10 @@ def view_cells(request, table_id):
 	user_profile = UserProfile.objects.get(user=request.user)
 	# Fetch all cells related to this table
 	cells = TableCell.objects.filter(table=table)
-	return render(request, 'history/view_cells.html', {'table': table, 'cells': cells, 'dark': user_settings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
+	max_column_index = cells.aggregate(Max('column_number'))['column_number__max']
+
+
+	return render(request, 'history/view_cells.html', {"columns": max_column_index + 1, 'table': table, 'cells': cells, 'dark': user_settings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 
 
 @csrf_exempt

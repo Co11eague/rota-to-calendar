@@ -3,32 +3,60 @@ import numpy as np
 
 
 def deskew_image(image):
-	# Convert image to grayscale
-	gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # Convert to grayscale
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-	# Perform edge detection
-	edges = cv2.Canny(gray, 50, 150, apertureSize=3)
+    # Apply edge detection
+    edges = cv2.Canny(gray, 50, 150)
 
-	# Detect lines in the image using Hough Line Transform
-	lines = cv2.HoughLines(edges, 1, np.pi / 180, threshold=100)
+    # Find contours in the edge-detected image
+    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-	# If no lines are detected, return the original image
-	if lines is None:
-		return image
+    # Find the largest rectangular contour (outer table border)
+    largest_contour = max(contours, key=cv2.contourArea, default=None)
 
-	# Find the angle of the most dominant line
-	angles = [np.rad2deg(line[0][1]) for line in lines]
-	median_angle = np.median(angles)  # The most common angle (median)
+    if largest_contour is None:
+        print("No table detected.")
+        return image  # Return original if no table is found
 
-	# If the median angle is close to horizontal or vertical (within a tolerance), skip rotation
-	tolerance = 1.0  # Adjust this value for sensitivity
-	if -tolerance < median_angle < tolerance or 90 - tolerance < median_angle < 90 + tolerance:
-		return image
+    # Approximate contour to a polygon
+    epsilon = 0.02 * cv2.arcLength(largest_contour, True)
+    approx = cv2.approxPolyDP(largest_contour, epsilon, True)
 
-	# Optionally log or return the median angle for analysis instead of rotating
-	print(f"Detected skew angle: {median_angle} degrees (skipping rotation)")
+    if len(approx) != 4:
+        print("Couldn't find a proper quadrilateral.")
+        return image
 
-	return image
+    # Order the corner points (top-left, top-right, bottom-right, bottom-left)
+    approx = sorted(approx[:, 0], key=lambda p: (p[1], p[0]))  # Sort by y first, then x
+    top_left, top_right = sorted(approx[:2], key=lambda p: p[0])
+    bottom_left, bottom_right = sorted(approx[2:], key=lambda p: p[0])
+
+    # Define the destination points for a straightened rectangle
+    width = max(
+        np.linalg.norm(top_right - top_left),
+        np.linalg.norm(bottom_right - bottom_left)
+    )
+    height = max(
+        np.linalg.norm(bottom_left - top_left),
+        np.linalg.norm(bottom_right - top_right)
+    )
+
+    dst_pts = np.array([
+        [0, 0],
+        [width - 1, 0],
+        [width - 1, height - 1],
+        [0, height - 1]
+    ], dtype="float32")
+
+    # Compute the perspective transform matrix
+    src_pts = np.array([top_left, top_right, bottom_right, bottom_left], dtype="float32")
+    M = cv2.getPerspectiveTransform(src_pts, dst_pts)
+
+    # Warp the image to get a straightened table
+    straightened = cv2.warpPerspective(image, M, (int(width), int(height)))
+
+    return straightened
 
 
 def split_table_into_list(image_path):
@@ -79,16 +107,29 @@ def split_table_into_list(image_path):
 	]
 
 	# Sort bounding boxes (by y, then x)
+	cell_matrix = []
+	row = []
+	threshold = 10  # Adjust for row separation tolerance
+	prev_y = None
 	sorted_boxes = sorted(filtered_boxes, key=lambda b: (b[1], b[0]))
 
 	# Extract cells into a list
-	cell_list = []
 	margin = 5  # Add padding
 	for x, y, w, h in sorted_boxes:
 		cropped_cell = inpainted_image[
 		               max(0, y + margin):min(image.shape[0], y + h - margin),
 		               max(0, x + margin):min(image.shape[1], x + w - margin)
 		               ]
-		cell_list.append(cropped_cell)
 
-	return cell_list
+		if prev_y is not None and abs(y - prev_y) > threshold:
+			# Start a new row
+			cell_matrix.append(row)
+			row = []
+
+		row.append(cropped_cell)
+		prev_y = y
+
+	if row:
+		cell_matrix.append(row)
+
+	return cell_matrix

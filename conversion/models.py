@@ -6,7 +6,6 @@ class UploadedTable(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to user
 	image = models.ImageField(upload_to='uploaded_tables/')  # Original table image
 	uploaded_at = models.DateTimeField(auto_now_add=True)
-	column_count = models.IntegerField()
 	title = models.CharField(max_length=50)
 
 
