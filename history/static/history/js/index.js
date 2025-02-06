@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const eventModal = document.getElementById('eventModal');
     const closeModalBtn = document.getElementById("cancelEventBtn");
     const overlay = document.getElementById('overlay');
-
+    const modalText = document.getElementById("modal-text");
+    const modalImage = document.getElementById("modal-image");
 
     const urlParams = new URLSearchParams(window.location.search)
     const sortValue = urlParams.get("sort")
@@ -19,6 +20,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function openModal() {
+
+        const ocrText = this.getAttribute("data-text");
+        const imageUrl = this.getAttribute("data-image");
+
+        // Update modal content
+        modalText.value = ocrText;
+        modalImage.src = imageUrl;
 
         // Get user's current scroll position
         const scrollY = window.scrollY;
@@ -52,18 +60,26 @@ document.addEventListener('DOMContentLoaded', function () {
     closeModalBtn.addEventListener("click", closeModal);
 
     const populateInput = (buttonId, inputId) => {
-        const buttons = document.querySelectorAll(`#${buttonId}`);
-        buttons.forEach(button => {
-            button.addEventListener("click", () => {
-                const cell = button.closest('.cell');  // Find the .cell element containing this button
-                const ocrText = cell.getAttribute('data-text');  // Get the OCR text from the data-text attribute
-                document.querySelector(`#${inputId}`).value = ocrText;  // Populate the corresponding input field
+        const button = document.getElementById(buttonId);
+
+        if (button) {
+            button.addEventListener("click", function () {
+                const dataText = modalText.value;
+
+                const inputField = document.querySelector(`#${inputId}`);
+                if (inputField) {
+                    inputField.value = dataText;  // Populate the corresponding input field
+                } else {
+                    console.warn(`No input field found with ID: ${inputId}`);
+                }
+
+                closeModal()
             });
-        });
+        }
     };
 
     // Call the function for each button/input pairing
-    populateInput("name", "name-input");
+    populateInput("title", "title-input");
     populateInput("start-time", "start-time-input");
     populateInput("start-date", "start-date-input");
     populateInput("location", "location-input");

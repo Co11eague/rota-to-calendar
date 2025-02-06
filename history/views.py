@@ -15,6 +15,7 @@ from schedule.models import Event as LocalEvent  # Assuming you're using django-
 from accountProfile.models import UserProfile
 from accountSettings.models import UserSettings
 from conversion.models import UploadedTable, TableCell
+from history.forms import CalendarForm
 
 
 @login_required
@@ -58,8 +59,10 @@ def view_cells(request, table_id):
 	cells = TableCell.objects.filter(table=table)
 	max_column_index = cells.aggregate(Max('column_number'))['column_number__max']
 
+	calendar_form = CalendarForm()
 
-	return render(request, 'history/view_cells.html', {"columns": max_column_index + 1, 'table': table, 'cells': cells, 'dark': user_settings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
+
+	return render(request, 'history/view_cells.html', {"calendar_form":calendar_form, "columns": max_column_index + 1, 'table': table, 'cells': cells, 'dark': user_settings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 
 
 @csrf_exempt
