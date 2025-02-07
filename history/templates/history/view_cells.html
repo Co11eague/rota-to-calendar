@@ -7,11 +7,20 @@
     <title>ShiftMate</title>
     <link rel="icon" href="../../../media/images/logo.png" type="image/x-icon">
     <link href="{% static 'history/css/output.css' %}" rel="stylesheet">
-    <script src="{% static 'history/js/index.js' %}"></script>
+    <script type="module" src="{% static 'history/js/view_cells.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sugar-date@2.0.6/dist/sugar-date.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/moment"></script>
+
+
 </head>
 <header class="bg-blue-600 text-white py-4 dark:bg-blue-800">
 </header>
+
+
 <body class="bg-gray-100 dark:bg-gray-900">
+
 {% include "home/menu.html" %}
 
 <div class="container mx-auto p-4">
@@ -37,13 +46,13 @@
                                     class="dark:bg-blue-700 dark:hover:bg-blue-600 w-32 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">
                                 Title
                             </button>
-                            <button id="start-time" type="button"
-                                    class="dark:bg-blue-700 dark:hover:bg-blue-600 w-32 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition" >
-                                Start time
-                            </button>
                             <button id="start-date" type="button"
-                                    class="dark:bg-blue-700 dark:hover:bg-blue-600 w-32 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition" >
+                                    class="dark:bg-blue-700 dark:hover:bg-blue-600 w-32 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">
                                 Start date
+                            </button>
+                            <button id="start-time" type="button"
+                                    class="dark:bg-blue-700 dark:hover:bg-blue-600 w-32 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">
+                                Start time
                             </button>
                         </div>
 
@@ -53,23 +62,26 @@
                                  class="w-full max-w-screen-lg object-contain rounded-md" src="">
                             <p class="block mt-2 text-sm font-medium text-gray-900 dark:text-gray-300">Extracted
                                 data:</p>
-                            <input type="text" class="text-gray-600 dark:text-gray-300 mt-2 p-2 bg-gray-100 dark:bg-gray-600 rounded-md text-base font-semibold overflow-hidden w-full flex-grow" id="modal-text">
+                            <input type="text"
+                                   class="text-center text-gray-600 dark:text-gray-300 mt-2 p-2 bg-gray-100 dark:bg-gray-600 rounded-md text-base font-semibold overflow-hidden w-full flex-grow"
+                                   id="modal-text">
 
                         </div>
 
                         <!-- Right Button Group -->
                         <div class="flex flex-col items-center space-y-2 right-buttons ml-4">
                             <button id="location" type="button"
-                                    class="dark:bg-blue-700 dark:hover:bg-blue-600 w-32 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition" >
+                                    class="dark:bg-blue-700 dark:hover:bg-blue-600 w-32 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">
                                 Location
                             </button>
-                            <button id="end-time" type="button"
-                                    class="dark:bg-blue-700 dark:hover:bg-blue-600 w-32 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition"  >
-                                End time
-                            </button>
+
                             <button id="end-date" type="button"
-                                    class="dark:bg-blue-700 dark:hover:bg-blue-600 w-32 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition" >
+                                    class="dark:bg-blue-700 dark:hover:bg-blue-600 w-32 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">
                                 End date
+                            </button>
+                            <button id="end-time" type="button"
+                                    class="dark:bg-blue-700 dark:hover:bg-blue-600 w-32 bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">
+                                End time
                             </button>
                         </div>
                     </div>
