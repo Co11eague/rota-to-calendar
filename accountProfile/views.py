@@ -1,9 +1,8 @@
+from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from django.contrib import messages
 
 from accountProfile.forms import CustomPasswordChangeForm, PersonalDataForm
 from accountProfile.models import UserProfile
@@ -20,17 +19,17 @@ def index(request):
 	if request.method == 'POST' and 'change_password' in request.POST:
 		password_form = CustomPasswordChangeForm(user, request.POST)
 		accountProfile_form = PersonalDataForm(
-            initial={
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'email': user.email,
-                'date_of_birth': user_profile.date_of_birth,
-                'phone_number': user_profile.phone_number,
-                'address': user_profile.address,
-                'profile_picture': user_profile.profile_picture.url if user_profile.profile_picture else None,
-            },
-            instance=user_profile
-        )
+			initial={
+				'first_name': user.first_name,
+				'last_name': user.last_name,
+				'email': user.email,
+				'date_of_birth': user_profile.date_of_birth,
+				'phone_number': user_profile.phone_number,
+				'address': user_profile.address,
+				'profile_picture': user_profile.profile_picture.url if user_profile.profile_picture else None,
+			},
+			instance=user_profile
+		)
 
 		if password_form.is_valid():
 			password_form.save()
@@ -55,17 +54,17 @@ def index(request):
 	else:
 		password_form = CustomPasswordChangeForm(user)
 		accountProfile_form = PersonalDataForm(
-            initial={
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'email': user.email,
-                'date_of_birth': user_profile.date_of_birth,
-                'phone_number': user_profile.phone_number,
-                'address': user_profile.address,
-                'profile_picture': user_profile.profile_picture.url if user_profile.profile_picture else None,
-            },
-            instance=user_profile
-        )
+			initial={
+				'first_name': user.first_name,
+				'last_name': user.last_name,
+				'email': user.email,
+				'date_of_birth': user_profile.date_of_birth,
+				'phone_number': user_profile.phone_number,
+				'address': user_profile.address,
+				'profile_picture': user_profile.profile_picture.url if user_profile.profile_picture else None,
+			},
+			instance=user_profile
+		)
 
 	return render(
 		request,

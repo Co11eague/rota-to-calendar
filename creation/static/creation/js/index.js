@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var endField = form.querySelector("[name='end']");
 
 
-
     // Initialize FullCalendar
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -88,14 +87,14 @@ document.addEventListener('DOMContentLoaded', function () {
         eventModal.classList.remove('hidden');
         document.body.style.pointerEvents = "none";
         eventModal.style.pointerEvents = "auto";
-                    overlay.classList.remove('hidden');
+        overlay.classList.remove('hidden');
 
     }
 
     function closeModal() {
         eventModal.classList.add("hidden");
         document.body.style.pointerEvents = "auto";
-                    overlay.classList.add('hidden');
+        overlay.classList.add('hidden');
 
 
     }

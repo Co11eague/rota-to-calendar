@@ -26,11 +26,11 @@
 }
 
 .dark .swiper-button-prev {
-        color: #1e40af; /* Color for dark mode */
+    color: #1e40af; /* Color for dark mode */
 }
 
 .dark .swiper-button-next {
-        color: #1e40af; /* Color for dark mode */
+    color: #1e40af; /* Color for dark mode */
 }
 
 .swiper-button-prev {
@@ -40,6 +40,7 @@
 .dark .swiper-pagination-bullet-active {
     background: #1e40af;
 }
+
 .swiper-pagination {
     position: absolute;
     bottom: 10px;

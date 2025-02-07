@@ -1,7 +1,6 @@
 import urllib.parse
 from datetime import datetime
 
-from django import template
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q, Max
@@ -20,7 +19,6 @@ from history.forms import CalendarForm
 
 @login_required
 def index(request):
-
 	VALID_SORT_FIELDS = ["title", "uploaded_at", "-uploaded_at", "date", "-date"]
 
 	sort = request.GET.get("sort", "-uploaded_at")
@@ -41,11 +39,12 @@ def index(request):
 	page_number = request.GET.get("page")
 	page_obj = paginator.get_page(page_number)
 
-
 	user_settings = UserSettings.objects.get(user=request.user)
 	user_profile = UserProfile.objects.get(user=request.user)
 
-	return render(request, 'history/index.html', {"search": search, "sort": sort, "page_obj": page_obj, 'dark': user_settings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
+	return render(request, 'history/index.html',
+	              {"search": search, "sort": sort, "page_obj": page_obj, 'dark': user_settings.darkMode,
+	               'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 
 
 @login_required
@@ -61,8 +60,10 @@ def view_cells(request, table_id):
 
 	calendar_form = CalendarForm()
 
-
-	return render(request, 'history/view_cells.html', {"calendar_form":calendar_form, "columns": max_column_index + 1, 'table': table, 'cells': cells, 'dark': user_settings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
+	return render(request, 'history/view_cells.html',
+	              {"calendar_form": calendar_form, "columns": max_column_index + 1, 'table': table, 'cells': cells,
+	               'dark': user_settings.darkMode,
+	               'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 
 
 @csrf_exempt
@@ -87,7 +88,7 @@ def convert(request):
 
 		saveToCalendar = UserSettings.objects.get(user=request.user).saveToCalendar
 		if saveToCalendar and action == 'convert+':
-			action="convert"
+			action = "convert"
 			calendar = get_object_or_404(LocalCalendar, slug="shifts-calendar")
 
 			# Save the event to the database

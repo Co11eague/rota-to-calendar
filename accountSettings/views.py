@@ -1,7 +1,7 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from django.contrib import messages
 
 from accountProfile.models import UserProfile
 from accountSettings.forms import SettingsForm
@@ -22,7 +22,6 @@ def index(request):
 	else:
 		settings_form = SettingsForm(instance=userSettings)
 
-
-
-	return render(request, 'accountSettings/index.html', {'form': settings_form, 'dark': userSettings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
+	return render(request, 'accountSettings/index.html', {'form': settings_form, 'dark': userSettings.darkMode,
+	                                                      'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 # Create your views here.

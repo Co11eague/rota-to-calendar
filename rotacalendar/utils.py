@@ -3,60 +3,60 @@ import numpy as np
 
 
 def deskew_image(image):
-    # Convert to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+	# Convert to grayscale
+	gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    # Apply edge detection
-    edges = cv2.Canny(gray, 50, 150)
+	# Apply edge detection
+	edges = cv2.Canny(gray, 50, 150)
 
-    # Find contours in the edge-detected image
-    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+	# Find contours in the edge-detected image
+	contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # Find the largest rectangular contour (outer table border)
-    largest_contour = max(contours, key=cv2.contourArea, default=None)
+	# Find the largest rectangular contour (outer table border)
+	largest_contour = max(contours, key=cv2.contourArea, default=None)
 
-    if largest_contour is None:
-        print("No table detected.")
-        return image  # Return original if no table is found
+	if largest_contour is None:
+		print("No table detected.")
+		return image  # Return original if no table is found
 
-    # Approximate contour to a polygon
-    epsilon = 0.02 * cv2.arcLength(largest_contour, True)
-    approx = cv2.approxPolyDP(largest_contour, epsilon, True)
+	# Approximate contour to a polygon
+	epsilon = 0.02 * cv2.arcLength(largest_contour, True)
+	approx = cv2.approxPolyDP(largest_contour, epsilon, True)
 
-    if len(approx) != 4:
-        print("Couldn't find a proper quadrilateral.")
-        return image
+	if len(approx) != 4:
+		print("Couldn't find a proper quadrilateral.")
+		return image
 
-    # Order the corner points (top-left, top-right, bottom-right, bottom-left)
-    approx = sorted(approx[:, 0], key=lambda p: (p[1], p[0]))  # Sort by y first, then x
-    top_left, top_right = sorted(approx[:2], key=lambda p: p[0])
-    bottom_left, bottom_right = sorted(approx[2:], key=lambda p: p[0])
+	# Order the corner points (top-left, top-right, bottom-right, bottom-left)
+	approx = sorted(approx[:, 0], key=lambda p: (p[1], p[0]))  # Sort by y first, then x
+	top_left, top_right = sorted(approx[:2], key=lambda p: p[0])
+	bottom_left, bottom_right = sorted(approx[2:], key=lambda p: p[0])
 
-    # Define the destination points for a straightened rectangle
-    width = max(
-        np.linalg.norm(top_right - top_left),
-        np.linalg.norm(bottom_right - bottom_left)
-    )
-    height = max(
-        np.linalg.norm(bottom_left - top_left),
-        np.linalg.norm(bottom_right - top_right)
-    )
+	# Define the destination points for a straightened rectangle
+	width = max(
+		np.linalg.norm(top_right - top_left),
+		np.linalg.norm(bottom_right - bottom_left)
+	)
+	height = max(
+		np.linalg.norm(bottom_left - top_left),
+		np.linalg.norm(bottom_right - top_right)
+	)
 
-    dst_pts = np.array([
-        [0, 0],
-        [width - 1, 0],
-        [width - 1, height - 1],
-        [0, height - 1]
-    ], dtype="float32")
+	dst_pts = np.array([
+		[0, 0],
+		[width - 1, 0],
+		[width - 1, height - 1],
+		[0, height - 1]
+	], dtype="float32")
 
-    # Compute the perspective transform matrix
-    src_pts = np.array([top_left, top_right, bottom_right, bottom_left], dtype="float32")
-    M = cv2.getPerspectiveTransform(src_pts, dst_pts)
+	# Compute the perspective transform matrix
+	src_pts = np.array([top_left, top_right, bottom_right, bottom_left], dtype="float32")
+	M = cv2.getPerspectiveTransform(src_pts, dst_pts)
 
-    # Warp the image to get a straightened table
-    straightened = cv2.warpPerspective(image, M, (int(width), int(height)))
+	# Warp the image to get a straightened table
+	straightened = cv2.warpPerspective(image, M, (int(width), int(height)))
 
-    return straightened
+	return straightened
 
 
 def split_table_into_list(image_path):

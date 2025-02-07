@@ -25,5 +25,3 @@ class SettingsForm(forms.ModelForm):
 				'class': 'sr-only peer z-10',
 			})
 		}
-
-

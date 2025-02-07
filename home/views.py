@@ -15,4 +15,6 @@ def index(request):
 	else:
 		user_profile = None
 		dark = False
-	return render(request, 'home/index.html', {'sliders': sliders, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None, 'dark': dark})
+	return render(request, 'home/index.html', {'sliders': sliders,
+	                                           'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None,
+	                                           'dark': dark})

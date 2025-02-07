@@ -9,7 +9,6 @@ import torch
 from PIL import Image, ImageOps
 from django.contrib.auth.decorators import login_required
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from easyocr import easyocr
 
@@ -17,7 +16,7 @@ from accountProfile.models import UserProfile
 from accountSettings.models import UserSettings
 from conversion.forms import ConversionForm
 from conversion.model import Model
-from conversion.models import UploadedTable, TableCell
+from conversion.models import TableCell
 from conversion.utils import AttnLabelConverter
 from rotacalendar import settings
 from rotacalendar.utils import split_table_into_list
@@ -110,6 +109,7 @@ def run_ocr_on_image(image):
 
 	return pred_text  # Return the predicted text
 
+
 def convert_to_inmemory_uploadedfile(image, name="cell_image.png"):
 	"""
 	Converts a numpy array image to a Django InMemoryUploadedFile.
@@ -131,23 +131,21 @@ def convert_to_inmemory_uploadedfile(image, name="cell_image.png"):
 	return uploaded_file
 
 
-
 @login_required
 def index(request):
 	user_settings = UserSettings.objects.get(user=request.user)
 	conversionForm = ConversionForm()
 	user_profile = UserProfile.objects.get(user=request.user)
 
-	return render(request, 'conversion/index.html', {'conversionForm': conversionForm, 'dark': user_settings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
+	return render(request, 'conversion/index.html', {'conversionForm': conversionForm, 'dark': user_settings.darkMode,
+	                                                 'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 
 
 @login_required
 def process_table_image(request):
 	if request.method == 'POST':
 
-
 		conversion_form = ConversionForm(request.POST, request.FILES)
-
 
 		if conversion_form.is_valid():
 			uploaded_table = conversion_form.save(commit=False)
@@ -160,8 +158,6 @@ def process_table_image(request):
 
 			# Process the table into a matrix (assuming you have a function for this)
 			table_matrix = split_table_into_list(uploaded_image_path)
-
-
 
 			reader = easyocr.Reader(['en'])
 
@@ -198,8 +194,8 @@ def process_table_image(request):
 						image=uploaded_file
 					)
 
-				# Optionally delete the original uploaded image if no longer needed
+			# Optionally delete the original uploaded image if no longer needed
 
-				# Return the image URLs for rendering
+			# Return the image URLs for rendering
 
 			return redirect('/history/' + str(uploaded_table.id) + '/cells/')

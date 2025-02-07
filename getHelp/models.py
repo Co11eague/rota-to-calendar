@@ -6,7 +6,7 @@ class Contact(models.Model):
 	name = models.CharField(max_length=255)
 	email = models.EmailField()
 	message = models.TextField()
-	file = models.FileField(upload_to='fine_tuning/', blank = True)
+	file = models.FileField(upload_to='fine_tuning/', blank=True)
 
 	def __str__(self):
 		return self.name
@@ -20,4 +20,3 @@ class Contact(models.Model):
 		choices=Help.choices,
 		default=Help.GENERAL,
 	)
-

@@ -1,10 +1,7 @@
-from datetime import datetime
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.decorators.csrf import csrf_exempt
 from schedule.models import Calendar
 from schedule.models import Event
 
@@ -18,7 +15,10 @@ def index(request):
 	user_settings = UserSettings.objects.get(user=request.user)
 	user_profile = UserProfile.objects.get(user=request.user)
 	event_form = EventForm()
-	return render(request, 'creation/index.html', {'event_form': event_form, 'dark': user_settings.darkMode, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
+	return render(request, 'creation/index.html', {'event_form': event_form, 'dark': user_settings.darkMode,
+	                                               'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
+
+
 # Create your views here.
 
 def user_events(request):
@@ -47,4 +47,3 @@ def add_event(request):
 		else:
 			messages.error(request, 'There was an input issue adding your shift.')
 	return redirect("creation")
-

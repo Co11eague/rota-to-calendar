@@ -14,25 +14,27 @@
 </header>
 <body class="bg-gray-100 dark:bg-gray-900">
 {% if messages %}
-<script>
-    const isDarkMode = document.documentElement.classList.contains("dark");
+    <script>
+        const isDarkMode = document.documentElement.classList.contains("dark");
 
-    document.addEventListener("DOMContentLoaded", function() {
-        {% for message in messages %}
-            Toastify({
-                text: "{{ message }}",
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                backgroundColor: isDarkMode
-                    ? "{% if message.tags == 'success' %}#16a34a{% elif message.tags == 'error' %}#b91c1c{% else %}#1e40af{% endif %}"
-                    : "{% if message.tags == 'success' %}#22c55e{% elif message.tags == 'error' %}#ef4444{% else %}#3b82f6{% endif %}",
-                close: true
+        document.addEventListener("DOMContentLoaded", function () {
+            {% for message in messages %}
+                Toastify({
+                    text: "{{ message }}",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: isDarkMode
+                        ? "{% if message.tags == 'success' %}#16a34a{% elif message.tags == 'error' %}#b91c1c{% else %}
+                            #1e40af{% endif %}"
+                        : "{% if message.tags == 'success' %}#22c55e{% elif message.tags == 'error' %}#ef4444{% else %}
+                            #3b82f6{% endif %}",
+                    close: true
 
-            }).showToast();
-        {% endfor %}
-    });
-</script>
+                }).showToast();
+            {% endfor %}
+        });
+    </script>
 {% endif %}
 {% include "home/menu.html" with dark=dark %}
 <div class="container mx-auto mt-12 p-6 max-w-lg bg-white shadow-lg rounded-md dark:bg-gray-800">

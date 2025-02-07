@@ -31,15 +31,15 @@ class CustomPasswordChangeForm(PasswordChangeForm):
 class PersonalDataForm(forms.ModelForm):
 	first_name = forms.CharField(
 		required=False,
-		label= 'Your first name',
+		label='Your first name',
 		widget=forms.TextInput(attrs={
-				'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
-				'placeholder': 'name'
-			})
+			'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+			'placeholder': 'name'
+		})
 	)
 	last_name = forms.CharField(
 		required=False,
-		label= 'Your last name',
+		label='Your last name',
 		widget=forms.TextInput(attrs={
 			'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
 			'placeholder': 'surname'
@@ -47,7 +47,7 @@ class PersonalDataForm(forms.ModelForm):
 	)
 	email = forms.EmailField(
 		required=False,
-		label= 'Your email',
+		label='Your email',
 		widget=forms.EmailInput(attrs={
 			'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
 			'placeholder': 'guest@email.com'

@@ -12,4 +12,5 @@ def index(request):
 	else:
 		dark = False
 		user_profile = None
-	return render(request, 'aboutus/index.html', {'dark': dark, 'profile_picture':  user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
+	return render(request, 'aboutus/index.html', {'dark': dark,
+	                                              'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None})

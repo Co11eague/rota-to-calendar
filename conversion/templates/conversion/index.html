@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShiftMate</title>
     <link href="{% static 'conversion/css/output.css' %}" rel="stylesheet">
-        <script src="{% static 'conversion/js/index.js' %}"></script>
+    <script src="{% static 'conversion/js/index.js' %}"></script>
 
     <link rel="icon" href="../../../media/images/logo.png" type="image/x-icon">
 </head>
@@ -46,8 +46,8 @@
                      class="w-full h-full border rounded border-dashed border-gray-300 bg-gray-50 overflow-hidden dark:bg-gray-700 flex justify-center items-center ">
                     <img id="preview-image" src="{% if field.value %}{{ field.value }}{% else %}#{% endif %}"
                          alt="Image preview" class="object-contain w-full h-full hidden">
- <span id="preview-placeholder"
-              class="w-full block text-gray-400 text-center !mx-8 {% if field.value %}hidden{% endif %}">No Image</span>
+                    <span id="preview-placeholder"
+                          class="w-full block text-gray-400 text-center !mx-8 {% if field.value %}hidden{% endif %}">No Image</span>
                 </div>
             </div>
         </div>
