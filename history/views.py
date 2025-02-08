@@ -1,12 +1,12 @@
 import urllib.parse
 from datetime import datetime
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q, Max
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.decorators.csrf import csrf_exempt
 from ics import Calendar, Event
 from schedule.models import Calendar as LocalCalendar
 from schedule.models import Event as LocalEvent  # Assuming you're using django-scheduler's Event model
@@ -66,76 +66,74 @@ def view_cells(request, table_id):
 	               'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 
 
-@csrf_exempt
 def convert(request):
 	if request.method == 'POST':
 		# Gather the form data
-		name = str(request.POST.get('Name'))
-		location = str(request.POST.get('Location'))
-		start_date = str(request.POST.get('Start Date'))
-		end_date = str(request.POST.get('End Date'))
-		start_time = str(request.POST.get('Start Time'))
-		end_time = str(request.POST.get('End Time'))
-		action = request.POST.get('action')  # Check which button was clicked
+		form = CalendarForm(request.POST)
 
-		try:
-			start_datetime = datetime.strptime(f"{start_date} {start_time}", "%Y-%m-%d %H:%M")
-			end_datetime = datetime.strptime(f"{end_date} {end_time}", "%Y-%m-%d %H:%M")
-		except ValueError:
-			return HttpResponse(
-				"Invalid date/time format. Please use YYYY-MM-DD for dates and HH:MM (24-hour format) for times.",
-				status=400)
+		if form.is_valid():
+			action = request.POST.get('action')  # Check which button was clicked
 
-		saveToCalendar = UserSettings.objects.get(user=request.user).saveToCalendar
-		if saveToCalendar and action == 'convert+':
-			action = "convert"
-			calendar = get_object_or_404(LocalCalendar, slug="shifts-calendar")
+			try:
+				start_date_str = form.cleaned_data['start_date'].strftime("%Y-%m-%d")
+				end_date_str = form.cleaned_data['end_date'].strftime("%Y-%m-%d")
+				start_time_str = form.cleaned_data['start_time'].strftime("%H:%M")
+				end_time_str = form.cleaned_data['end_time'].strftime("%H:%M")
 
-			# Save the event to the database
-			event = LocalEvent.objects.create(
-				title=name,
-				start=start_datetime,
-				end=end_datetime,
-				creator=request.user,  # Use the logged-in user as the event creator
-				calendar=calendar  # Or your default calendar
-			)
 
-		if action == 'convert':
+				start_datetime = datetime.strptime(f"{start_date_str} {start_time_str}", "%Y-%m-%d %H:%M")
+				end_datetime = datetime.strptime(f"{end_date_str} {end_time_str}", "%Y-%m-%d %H:%M")
+			except ValueError:
+				start_datetime = None
+				end_datetime = None
+				messages.error(request, "There was an issue formatting your date for the calendar.")
 
-			# Convert start and end datetime
+			if start_datetime and end_datetime:
 
-			# Create calendar event
-			c = Calendar()
-			e = Event()
-			e.name = name
-			e.begin = start_datetime
-			e.end = end_datetime
-			e.location = location
-			e.description = "Test"
-			c.events.add(e)
+				saveToCalendar = UserSettings.objects.get(user=request.user).saveToCalendar
 
-			# Generate the .ics file
-			ics_content = c.serialize()
+				if saveToCalendar and action == 'convert':
+					action = "convert"
+					calendar = get_object_or_404(LocalCalendar, slug="shifts-calendar")
 
-			# Create response to download the file
-			response = HttpResponse(ics_content, content_type='text/calendar')
-			response['Content-Disposition'] = f'attachment; filename="{name.replace(" ", "_")}_event.ics"'
-			return response
-		else:
-			google_calendar_url = (
-					"https://calendar.google.com/calendar/render?"
-					+ urllib.parse.urlencode({
-				"action": "TEMPLATE",
-				"text": name,  # Event title
-				"details": f"Event at {location}",  # Event details
-				"location": location,
-				"dates": f"{start_datetime.strftime('%Y%m%dT%H%M%S')}/{end_datetime.strftime('%Y%m%dT%H%M%S')}",
-				"sf": "true",
-				"output": "xml"  # Optional: opens in Google's event editor
-			})
-			)
+					# Save the event to the database
+					LocalEvent.objects.create(
+						title=form.cleaned_data['title'],
+						start=start_datetime,
+						end=end_datetime,
+						creator=request.user,  # Use the logged-in user as the event creator
+						calendar=calendar  # Or your default calendar
+					)
+				if action == 'convert+':
 
-			# Redirect to Google Calendar
-			return redirect(google_calendar_url)
+					c = Calendar()
+					e = Event()
+					e.name = form.cleaned_data['title']
+					e.begin = start_datetime
+					e.end = end_datetime
+					e.location = form.cleaned_data['location']
+					c.events.add(e)
 
-	return HttpResponse("Invalid request method", status=405)
+					# Generate the .ics file
+					ics_content = c.serialize()
+
+					# Create response to download the file
+					response = HttpResponse(ics_content, content_type='text/calendar')
+					response['Content-Disposition'] = f'attachment; filename="{form.cleaned_data["title"].replace(" ", "_")}_event.ics"'
+					return response
+				else:
+					google_calendar_url = (
+							"https://calendar.google.com/calendar/render?"
+							+ urllib.parse.urlencode({
+						"action": "TEMPLATE",
+						"text": form.cleaned_data['title'],  # Event title
+						"details": f"Event at {form.cleaned_data['location']}",  # Event details
+						"location": form.cleaned_data['location'],
+						"dates": f"{start_datetime.strftime('%Y%m%dT%H%M%S')}/{end_datetime.strftime('%Y%m%dT%H%M%S')}",
+						"sf": "true",
+						"output": "xml"  # Optional: opens in Google's event editor
+					})
+					)
+
+					# Redirect to Google Calendar
+					return redirect(google_calendar_url)
