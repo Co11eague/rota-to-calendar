@@ -25,7 +25,7 @@ def user_events(request):
 	if request.user.is_authenticated:
 		# Filter events where the creator is the logged-in user
 		events = Event.objects.filter(creator=request.user)
-		events_data = [{"title": event.title, "start": event.start, "end": event.end} for event in events]
+		events_data = [{"title": event.title, "start": event.start, "end": event.end, "description": event.description} for event in events]
 		return JsonResponse(events_data, safe=False)
 	return JsonResponse([], safe=False)
 

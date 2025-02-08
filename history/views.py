@@ -5,8 +5,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q, Max
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.csrf import csrf_exempt
 from ics import Calendar, Event
 from schedule.models import Calendar as LocalCalendar
 from schedule.models import Event as LocalEvent  # Assuming you're using django-scheduler's Event model
@@ -65,7 +66,7 @@ def view_cells(request, table_id):
 	               'dark': user_settings.darkMode,
 	               'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 
-
+@csrf_exempt
 def convert(request):
 	if request.method == 'POST':
 		# Gather the form data
@@ -88,6 +89,7 @@ def convert(request):
 				end_datetime = None
 				messages.error(request, "There was an issue formatting your date for the calendar.")
 
+
 			if start_datetime and end_datetime:
 
 				saveToCalendar = UserSettings.objects.get(user=request.user).saveToCalendar
@@ -104,7 +106,7 @@ def convert(request):
 						creator=request.user,  # Use the logged-in user as the event creator
 						calendar=calendar  # Or your default calendar
 					)
-				if action == 'convert+':
+				if action == 'convert' or action == 'convert+':
 
 					c = Calendar()
 					e = Event()
@@ -137,3 +139,5 @@ def convert(request):
 
 					# Redirect to Google Calendar
 					return redirect(google_calendar_url)
+		messages.error(request, "Could not convert event to calendar file.")
+		return JsonResponse({'error': "Invalid form data"}, status=400)

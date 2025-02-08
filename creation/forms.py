@@ -9,7 +9,7 @@ class EventForm(forms.ModelForm):
 
 		labels = {
 			'title': 'Your shift title',
-			'description': 'Your shift description',
+			'description': 'Your shift location',
 			'start': 'Your shift start time',
 			'end': 'Your shift end time',
 		}

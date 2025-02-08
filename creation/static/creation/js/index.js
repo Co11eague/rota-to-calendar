@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var eventTitle = info.event.title;
             var eventStart = info.event.start;
             var eventEnd = info.event.end;
-            var eventDescription = info.event.description;
+            var eventDescription = info.event.extendedProps.description;
 
             console.log(eventEnd)
 
@@ -33,22 +33,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Prepare the POST data
             var data = new FormData();
-            data.append("Name", eventTitle);
-            data.append("Location", null);
-            data.append("Description", eventDescription)
-            data.append("Start Date", eventStartDate);
-            data.append("End Date", eventEndDate);
-            data.append("Start Time", eventStartTime);
-            data.append("End Time", eventEndTime);
+            data.append("title", eventTitle);
+            data.append("location", eventDescription)
+            data.append("start_date", eventStartDate);
+            data.append("end_date", eventEndDate);
+            data.append("start_time", eventStartTime);
+            data.append("end_time", eventEndTime);
             data.append("action", "convert+");
 
-            // Make the POST request to trigger ICS file download
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/history/calendar-convert/", true);
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    // If successful, this should initiate download of the .ics file
-                    var blob = xhr.response;
+
+            fetch("/history/calendar-convert/", {
+                method: "POST",
+                body: data
+            }).then(response => response.blob())
+                .then(blob => {
                     var downloadUrl = window.URL.createObjectURL(blob);
                     var a = document.createElement('a');
                     a.href = downloadUrl;
@@ -56,13 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
-                } else {
-                    console.error('Failed to generate ICS file.');
-                }
-            };
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.responseType = 'blob';  // Ensure the response is treated as a file (blob)
-            xhr.send(data);
+                }).catch(error => console.error("Error:", error));
         },
 
         select: function (info) {
