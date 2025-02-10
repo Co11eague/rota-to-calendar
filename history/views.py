@@ -52,7 +52,12 @@ def index(request):
 # Create your views here.
 def view_cells(request, table_id):
 	# Fetch the selected table
-	table = get_object_or_404(UploadedTable, id=table_id)
+	try:
+		table = UploadedTable.objects.get(id=table_id)
+	except UploadedTable.DoesNotExist:
+		messages.error(request, "The requested table does not exist.")
+		return redirect("home")
+
 	user_settings = UserSettings.objects.get(user=request.user)
 	user_profile = UserProfile.objects.get(user=request.user)
 	# Fetch all cells related to this table
@@ -65,6 +70,7 @@ def view_cells(request, table_id):
 	              {"calendar_form": calendar_form, "columns": max_column_index + 1, 'table': table, 'cells': cells,
 	               'dark': user_settings.darkMode,
 	               'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
+
 
 @csrf_exempt
 def convert(request):
@@ -81,14 +87,12 @@ def convert(request):
 				start_time_str = form.cleaned_data['start_time'].strftime("%H:%M")
 				end_time_str = form.cleaned_data['end_time'].strftime("%H:%M")
 
-
 				start_datetime = datetime.strptime(f"{start_date_str} {start_time_str}", "%Y-%m-%d %H:%M")
 				end_datetime = datetime.strptime(f"{end_date_str} {end_time_str}", "%Y-%m-%d %H:%M")
 			except ValueError:
 				start_datetime = None
 				end_datetime = None
 				messages.error(request, "There was an issue formatting your date for the calendar.")
-
 
 			if start_datetime and end_datetime:
 
@@ -121,7 +125,8 @@ def convert(request):
 
 					# Create response to download the file
 					response = HttpResponse(ics_content, content_type='text/calendar')
-					response['Content-Disposition'] = f'attachment; filename="{form.cleaned_data["title"].replace(" ", "_")}_event.ics"'
+					response[
+						'Content-Disposition'] = f'attachment; filename="{form.cleaned_data["title"].replace(" ", "_")}_event.ics"'
 					return response
 				else:
 					google_calendar_url = (
