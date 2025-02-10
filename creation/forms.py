@@ -5,7 +5,7 @@ from schedule.models import Event
 class EventForm(forms.ModelForm):
 	class Meta:
 		model = Event
-		fields = ['title', 'description', 'start', 'end']  # Include UserProfile fields
+		fields = ['title', 'description', 'start', 'end']
 
 		labels = {
 			'title': 'Your shift title',

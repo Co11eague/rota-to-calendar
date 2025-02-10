@@ -11,8 +11,8 @@ class CalendarFormTest(TestCase):
 		form_data = {
 			'title': 'July shift',
 			'location': 'Wetherspoons',
-			'start_time': time(9, 0),  # 09:00 AM
-			'end_time': time(17, 0),  # 05:00 PM
+			'start_time': time(9, 0),
+			'end_time': time(17, 0),
 			'start_date': date(2025, 7, 1),
 			'end_date': date(2025, 7, 31)
 		}
@@ -30,8 +30,8 @@ class CalendarFormTest(TestCase):
 		form_data = {
 			'title': 'July shift',
 			'location': 'Wetherspoons',
-			'start_time': "25:00",  # 09:00 AM
-			'end_time': "random",  # 05:00 PM
+			'start_time': "25:00",
+			'end_time': "random",
 			'start_date': date(2025, 7, 1),
 			'end_date': date(2025, 7, 31)
 		}

@@ -10,7 +10,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from ics import Calendar, Event
 from schedule.models import Calendar as LocalCalendar
-from schedule.models import Event as LocalEvent  # Assuming you're using django-scheduler's Event model
+from schedule.models import Event as LocalEvent
 
 from accountProfile.models import UserProfile
 from accountSettings.models import UserSettings
@@ -49,9 +49,7 @@ def index(request):
 
 
 @login_required
-# Create your views here.
 def view_cells(request, table_id):
-	# Fetch the selected table
 	try:
 		table = UploadedTable.objects.get(id=table_id)
 	except UploadedTable.DoesNotExist:
@@ -60,7 +58,7 @@ def view_cells(request, table_id):
 
 	user_settings = UserSettings.objects.get(user=request.user)
 	user_profile = UserProfile.objects.get(user=request.user)
-	# Fetch all cells related to this table
+
 	cells = TableCell.objects.filter(table=table)
 	max_column_index = cells.aggregate(Max('column_number'))['column_number__max']
 
@@ -75,11 +73,10 @@ def view_cells(request, table_id):
 @csrf_exempt
 def convert(request):
 	if request.method == 'POST':
-		# Gather the form data
 		form = CalendarForm(request.POST)
 
 		if form.is_valid():
-			action = request.POST.get('action')  # Check which button was clicked
+			action = request.POST.get('action')
 
 			try:
 				start_date_str = form.cleaned_data['start_date'].strftime("%Y-%m-%d")
@@ -98,17 +95,16 @@ def convert(request):
 
 				saveToCalendar = UserSettings.objects.get(user=request.user).saveToCalendar
 
-				if saveToCalendar and action == 'convert':
+				if saveToCalendar and (action == 'convert' or action == 'google') :
 					action = "convert"
 					calendar = get_object_or_404(LocalCalendar, slug="shifts-calendar")
 
-					# Save the event to the database
 					LocalEvent.objects.create(
 						title=form.cleaned_data['title'],
 						start=start_datetime,
 						end=end_datetime,
-						creator=request.user,  # Use the logged-in user as the event creator
-						calendar=calendar  # Or your default calendar
+						creator=request.user,
+						calendar=calendar
 					)
 				if action == 'convert' or action == 'convert+':
 
@@ -120,10 +116,8 @@ def convert(request):
 					e.location = form.cleaned_data['location']
 					c.events.add(e)
 
-					# Generate the .ics file
 					ics_content = c.serialize()
 
-					# Create response to download the file
 					response = HttpResponse(ics_content, content_type='text/calendar')
 					response[
 						'Content-Disposition'] = f'attachment; filename="{form.cleaned_data["title"].replace(" ", "_")}_event.ics"'
@@ -133,12 +127,12 @@ def convert(request):
 							"https://calendar.google.com/calendar/render?"
 							+ urllib.parse.urlencode({
 						"action": "TEMPLATE",
-						"text": form.cleaned_data['title'],  # Event title
-						"details": f"Event at {form.cleaned_data['location']}",  # Event details
+						"text": form.cleaned_data['title'],
+						"details": f"Event at {form.cleaned_data['location']}",
 						"location": form.cleaned_data['location'],
 						"dates": f"{start_datetime.strftime('%Y%m%dT%H%M%S')}/{end_datetime.strftime('%Y%m%dT%H%M%S')}",
 						"sf": "true",
-						"output": "xml"  # Optional: opens in Google's event editor
+						"output": "xml"
 					})
 					)
 

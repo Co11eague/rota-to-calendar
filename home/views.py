@@ -1,4 +1,3 @@
-# views.py
 from django.shortcuts import render
 
 from accountProfile.models import UserProfile
@@ -7,7 +6,7 @@ from .models import Slider
 
 
 def index(request):
-	sliders = Slider.objects.all()  # Fetch all slider images
+	sliders = Slider.objects.all()
 	if request.user.is_authenticated:
 		user_profile = UserProfile.objects.get(user=request.user)
 		dark = UserSettings.objects.get(user=request.user).darkMode

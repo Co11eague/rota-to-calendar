@@ -5,8 +5,8 @@ from .models import Contact
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
-	list_display = ('name', 'email')  # Customize the list display
-	readonly_fields = ('name', 'email', 'message', 'file', 'helpType')  # Make all fields read-only
+	list_display = ('name', 'email')
+	readonly_fields = ('name', 'email', 'message', 'file', 'helpType')
 
 	def has_add_permission(self, request):
 		"""Disable the add button."""

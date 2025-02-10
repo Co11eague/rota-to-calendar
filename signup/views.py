@@ -13,10 +13,9 @@ def index(request):
 			login(request, user)
 			return redirect('home')
 		else:
-			print(form.errors)  # Debug: Show errors in the console
+			print(form.errors)
 	elif request.user.is_authenticated:
 		return redirect('home')
 	else:
 		form = SignupForm()
 	return render(request, 'signup/index.html', {'form': form})
-# Create your views here.

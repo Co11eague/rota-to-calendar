@@ -10,11 +10,11 @@ def index(request):
 		if form.is_valid():
 			username = form.cleaned_data['username']
 			password = form.cleaned_data['password']
-			# Authenticate using the custom backend (username or email)
+
 			user = authenticate(request, username=username, password=password)
 			if user is not None:
 				login(request, user)
-				return redirect('home')  # Redirect to a protected page after login
+				return redirect('home')
 			else:
 				form.add_error(None, 'Invalid login credentials.')
 	elif request.user.is_authenticated:
@@ -23,4 +23,3 @@ def index(request):
 		form = LoginForm()
 
 	return render(request, 'signin/index.html', {'form': form})
-# Create your views here.

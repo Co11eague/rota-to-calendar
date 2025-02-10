@@ -16,4 +16,3 @@ class UploadedTableAdmin(admin.ModelAdmin):
 admin.site.register(UploadedTable, UploadedTableAdmin)
 admin.site.register(TableCell)
 
-# Register your models here.

@@ -19,8 +19,6 @@ def index(request):
 	                                               'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 
 
-# Create your views here.
-
 def user_events(request):
 	if request.user.is_authenticated:
 		# Filter events where the creator is the logged-in user
