@@ -1,17 +1,75 @@
 from datetime import datetime
-from unittest.mock import patch, ANY
+from unittest import mock
+from unittest.mock import patch, ANY, MagicMock
 
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 from schedule.models import Calendar
+from schedule.models import Event as LocalEvent
 
+
+from accountSettings.models import UserSettings
 from conversion.models import UploadedTable, TableCell
+from history.views import index, view_cells, convert
 
 
-class HistoryViewsTest(TestCase):
+class HistoryViewsUnitTest(TestCase):
+	def setUp(self):
+		self.factory = RequestFactory()
+		self.user = User.objects.create_user(username='testuser', email='tester@test.com', password='testing123*')
+		self.user_settings = mock.MagicMock(spec=UserSettings)
+		self.user_settings.darkMode = True
+
+	@patch("history.views.UploadedTable.objects.filter")
+	@patch("history.views.UserSettings.objects.get")
+	@patch("history.views.UserProfile.objects.get")
+	def test_index_view(self, mock_user_profile, mock_user_settings, mock_uploaded_table_filter):
+		"""Test index view with mocked database calls."""
+		request = self.factory.get(reverse("history"))
+		request.user = self.user
+
+		mock_user_settings.return_value = self.user_settings
+		mock_user_profile.return_value.profile_picture = None
+		mock_uploaded_table_filter.return_value.order_by.return_value = []
+
+		response = index(request)
+		self.assertEqual(response.status_code, 200)
+		self.assertIn(b"search", response.content)
+
+	@patch("history.views.UserSettings.objects.get")
+	@patch("history.views.LocalEvent.objects.create")
+	@patch("history.views.get_object_or_404")
+	def test_convert_saves_to_calendar(self, mock_get_calendar, mock_local_event_create, mock_user_settings_get):
+		"""Test convert saves to calendar when enabled."""
+		request = self.factory.post(reverse("convert"), data={
+			"title": "Meeting",
+			"location": "Office",
+			"start_date": "2025-02-10",
+			"end_date": "2025-02-10",
+			"start_time": "10:00",
+			"end_time": "12:00",
+			"action": "convert"
+		})
+		request.user = self.user
+
+		mock_user_settings_get.return_value.saveToCalendar = True
+		mock_get_calendar.return_value = MagicMock()
+
+		response = convert(request)
+
+		self.assertEqual(response.status_code, 200)
+		mock_local_event_create.assert_called_once_with(
+			title="Meeting",
+			start=ANY,
+			end=ANY,
+			creator=self.user,
+			calendar=mock_get_calendar.return_value
+		)
+
+class HistoryViewsIntegrationTest(TestCase):
 	def setUp(self):
 		self.dummy_table_image = SimpleUploadedFile("test_image.jpg", b"file_content", content_type="image/jpeg")
 		self.dummy_cell_image = SimpleUploadedFile("test_image.jpg", b"file_content", content_type="image/jpeg")
@@ -103,12 +161,8 @@ class HistoryViewsTest(TestCase):
 		self.assertEqual(response.status_code, 400)
 		self.assertJSONEqual(response.content, {'error': "Invalid form data"})
 
-	@patch("accountSettings.models.UserSettings.objects.get")
-	def test_convert_google_calendar_redirect(self, mock_get_user_settings):
+	def test_convert_google_calendar_redirect(self):
 		self.client.login(username="testuser", password="testing123*")
-
-		mock_user_settings = mock_get_user_settings.return_value
-		mock_user_settings.saveToCalendar = False
 
 		data = {
 			'title': 'Meeting',
@@ -128,15 +182,13 @@ class HistoryViewsTest(TestCase):
 		self.assertIn("text=Meeting", response.url)
 		self.assertIn("location=Office", response.url)
 
-		mock_get_user_settings.assert_called_once_with(user=self.user)
-
-@patch('history.views.LocalEvent.objects.create')
-@patch('history.views.UserSettings.objects.get')
-def test_convert_saves_to_local_calendar(self, mock_user_settings, mock_event_create):
+def test_convert_saves_to_local_calendar(self):
     """Test event is saved to the local calendar when saveToCalendar is enabled."""
     self.client.login(username="testuser", password="testing123*")
 
-    mock_user_settings.return_value.saveToCalendar = True
+    self.user_settings = UserSettings.objects.get(user=self.user)
+    self.user_settings.saveToCalendar = True
+    self.user_settings.save()
 
     data = {
         'title': 'Meeting',
@@ -149,15 +201,17 @@ def test_convert_saves_to_local_calendar(self, mock_user_settings, mock_event_cr
     }
 
     response = self.client.post(reverse('convert'), data)
-
     self.assertEqual(response.status_code, 200)
-    mock_event_create.assert_called_once_with(
+
+    event_exists = LocalEvent.objects.filter(
         title="Meeting",
-        start=datetime(2025, 2, 10, 10, 0),
-        end=datetime(2025, 2, 10, 12, 0),
-        creator=self.user,
-        calendar=ANY,
-    )
+        location="Office",
+        start="2025-02-10 10:00:00",
+        end="2025-02-10 12:00:00",
+        creator=self.user
+    ).exists()
+
+    self.assertTrue(event_exists)
 
 class IndexPaginationTests(TestCase):
     def setUp(self):
