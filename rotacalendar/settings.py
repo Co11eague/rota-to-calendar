@@ -101,16 +101,28 @@ WSGI_APPLICATION = 'rotacalendar.wsgi.application'
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME', default='shiftmate'),
-        'USER': env('DB_USER', default='root'),
-        'PASSWORD': env('DB_PASSWORD', default='labasrytas'),
-        'HOST': env('DB_HOST', default='localhost'),
-        'PORT': env('DB_PORT', default='5432'),
-    }
-}
+if os.getenv('GITHUB_WORKFLOW'):
+	DATABASES = {
+		'default': {
+			'ENGINE': 'django.db.backends.postgresql',
+			'NAME': 'github-actions',
+			'USER': 'postgres',
+			'PASSWORD': 'postgres',
+			'HOST': 'localhost',
+			'PORT': '5432'
+		}
+	}
+else:
+	DATABASES = {
+	    'default': {
+	        'ENGINE': 'django.db.backends.postgresql',
+	        'NAME': env('DB_NAME', default='shiftmate'),
+	        'USER': env('DB_USER', default='root'),
+	        'PASSWORD': env('DB_PASSWORD', default='labasrytas'),
+	        'HOST': env('DB_HOST', default='localhost'),
+	        'PORT': env('DB_PORT', default='5432'),
+	    }
+	}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
