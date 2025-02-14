@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 
 import environ
+from django.conf import settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +32,11 @@ ALLOWED_HOSTS = ["141.144.199.222", "localhost", "127.0.0.1"]
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]  # Add this to allow static files in your project directory
+# Remove STATICFILES_DIRS when DEBUG is False
+if DEBUG:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+else:
+    STATICFILES_DIRS = []
 
 STATIC_ROOT = BASE_DIR / "staticfiles"  # This will be the directory where `collectstatic` places all static files
 
@@ -63,8 +68,11 @@ LOGIN_URL = '/signin/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-MEDIA_URL = '/media/'  # URL to access media files
+MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Path to the media folder
+
+def media_url_context(request):
+    return {"MEDIA_URL": settings.MEDIA_URL}
 
 MIDDLEWARE = [
 	'django.middleware.security.SecurityMiddleware',
@@ -89,6 +97,7 @@ TEMPLATES = [
 				'django.template.context_processors.request',
 				'django.contrib.auth.context_processors.auth',
 				'django.contrib.messages.context_processors.messages',
+				"rotacalendar.settings.media_url_context",
 			],
 		},
 	},
