@@ -120,7 +120,11 @@ if os.getenv('GITHUB_WORKFLOW'):
 			'USER': 'postgres',
 			'PASSWORD': 'postgres',
 			'HOST': 'localhost',
-			'PORT': '5432'
+			'PORT': '5432',
+			'TEST': {
+				'NAME': 'test_github_actions',
+			},
+
 		}
 	}
 else:
@@ -132,6 +136,9 @@ else:
 	        'PASSWORD': env('DB_PASSWORD', default='labasrytas'),
 	        'HOST': env('DB_HOST', default='localhost'),
 	        'PORT': env('DB_PORT', default='5432'),
+		    'TEST': {
+			    'NAME': 'test_shiftmate',
+		    },
 	    }
 	}
 
