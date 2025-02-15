@@ -44,6 +44,9 @@ jobs:
         source venv/bin/activate
         pip install -r requirements.txt
 
+    - name: Install NPM Packages
+      run: npm install
+
     - name: Build Tailwind CSS
       run: |
         find . -type f -path "*/static/*/css/tailwind.css" | while read inputFile; do
