@@ -67,6 +67,9 @@ INSTALLED_APPS = [
 
 LOGIN_URL = '/signin/'
 
+LOG_DIR = os.path.join(os.path.expanduser("~"), "logs")
+os.makedirs(LOG_DIR, exist_ok=True)  # Ensure the directory exists
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -74,7 +77,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/var/log/django.log',
+            'filename': os.path.join(LOG_DIR, "django.log"),
         },
     },
     'loggers': {
