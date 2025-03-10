@@ -60,12 +60,12 @@ def view_cells(request, table_id):
 	user_profile = UserProfile.objects.get(user=request.user)
 
 	cells = TableCell.objects.filter(table=table)
-	max_column_index = cells.aggregate(Max('column_number'))['column_number__max']
+	max_column_index = int(table.column_count)
 
 	calendar_form = CalendarForm()
 
 	return render(request, 'history/view_cells.html',
-	              {"calendar_form": calendar_form, "columns": max_column_index + 1, 'table': table, 'cells': cells,
+	              {"calendar_form": calendar_form, "columns": max_column_index, 'table': table, 'cells': cells,
 	               'dark': user_settings.darkMode,
 	               'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
 
