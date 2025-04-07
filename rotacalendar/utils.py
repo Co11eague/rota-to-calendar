@@ -80,10 +80,6 @@ def split_table_into_list(image_path):
 	horizontal = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel_h)
 	vertical = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel_v)
 
-	# Combine horizontal and vertical lines to detect the table grid
-	grid_dilate_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
-	binary = cv2.dilate(binary, grid_dilate_kernel, iterations=1)
-
 	grid = cv2.bitwise_or(horizontal, vertical)
 
 	# Inpaint the grid lines
