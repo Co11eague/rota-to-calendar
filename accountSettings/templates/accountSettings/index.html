@@ -12,7 +12,7 @@
 </head>
 <header class="bg-blue-600 text-white py-4 dark:bg-blue-800">
 </header>
-<body class="bg-gray-100 dark:bg-gray-900">
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col">
 {% if messages %}
     <script>
         const isDarkMode = document.documentElement.classList.contains("dark");
@@ -27,9 +27,9 @@
                     backgroundColor: isDarkMode
                         ? "{% if message.tags == 'success' %}#16a34a{% elif message.tags == 'error' %}#b91c1c{% else %}
                             #1e40af{% endif %}"
-                        : "{% if message.tags == 'success' %}#22c55e{% elif message.tags == 'error' %}#ef4444{% else %}
-                            #3b82f6{% endif %}",
-                    close: true
+                : "{% if message.tags == 'success' %}#22c55e{% elif message.tags == 'error' %}#ef4444{% else %}
+                #3b82f6{% endif %}",
+                close: true
 
                 }).showToast();
             {% endfor %}
@@ -37,42 +37,44 @@
     </script>
 {% endif %}
 {% include "home/menu.html" with dark=dark %}
-<div class="container mx-auto mt-12 p-6 max-w-lg bg-white shadow-lg rounded-md dark:bg-gray-800">
-    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center mb-4">
-        Settings</h1>
-    <form method="post" class="space-y-2 md:space-y-2">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <div>
-            <label class="inline-flex items-center cursor-pointer">
-                {{ form.darkMode }}
-                <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
-                <span class="block text-sm font-medium text-gray-900 dark:text-gray-300 ms-3">Dark mode</span>
-            </label>
-        </div>
-        <div>
-            <label class="inline-flex items-center cursor-pointer">
-                {{ form.saveToCalendar }}
-                <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
-                <span class="block text-sm font-medium text-gray-900 dark:text-gray-300 ms-3">Save conversions to calendar</span>
-            </label>
-        </div>
-        <div>
-            <label class="inline-flex items-center pb-2">
-                <span class="block text-sm font-medium text-gray-900 dark:text-gray-300 ms-3 me-1">OCR recognition model</span>
-                {{ form.ocrRecognition }}
-            </label>
+<main class="flex-grow">
+    <div class="container mx-auto mt-12 p-6 max-w-lg bg-white shadow-lg mb-8 rounded-md dark:bg-gray-800 ">
+        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center mb-4">
+            Settings</h1>
+        <form method="post" class="space-y-2 md:space-y-2">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
             <div>
-                <button type="submit"
-                        name="action" value="help"
-                        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition">
-                    Save
-                </button>
+                <label class="inline-flex items-center cursor-pointer">
+                    {{ form.darkMode }}
+                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                    <span class="block text-sm font-medium text-gray-900 dark:text-gray-300 ms-3">Dark mode</span>
+                </label>
             </div>
-        </div>
-    </form>
-</div>
-<footer class="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-6">
+            <div>
+                <label class="inline-flex items-center cursor-pointer">
+                    {{ form.saveToCalendar }}
+                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                    <span class="block text-sm font-medium text-gray-900 dark:text-gray-300 ms-3">Save conversions to calendar</span>
+                </label>
+            </div>
+            <div>
+                <label class="inline-flex items-center pb-2">
+                    <span class="block text-sm font-medium text-gray-900 dark:text-gray-300 ms-3 me-1">OCR recognition model</span>
+                    {{ form.ocrRecognition }}
+                </label>
+                <div>
+                    <button type="submit"
+                            name="action" value="help"
+                            class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+<footer class="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-4">
     <div class="max-w-screen-xl mx-auto px-4 flex flex-col sm:flex-row justify-center items-center gap-4 text-sm text-center sm:text-left">
 
         <a href="https://www.termsfeed.com/live/47acb236-3302-486d-a621-de7eecae9fac"
@@ -80,7 +82,7 @@
            class="underline hover:text-blue-600 dark:hover:text-blue-400">
             Privacy Policy
         </a>
-                <p>&copy; {{ now|date:"Y" }} ShiftMate. All rights reserved.</p>
+        <p>&copy; {{ now|date:"Y" }} ShiftMate. All rights reserved.</p>
         <a href="https://en.wikipedia.org/wiki/General_Data_Protection_Regulation"
            target="_blank"
            class="underline hover:text-blue-600 dark:hover:text-blue-400">

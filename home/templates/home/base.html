@@ -12,7 +12,7 @@
 </head>
 <header class="bg-blue-600 text-white py-4 dark:bg-blue-800">
 </header>
-<body class="bg-gray-100 dark:bg-gray-900">
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col">
 {% if messages %}
     <script>
         const isDarkMode = document.documentElement.classList.contains("dark");
@@ -27,9 +27,9 @@
                     backgroundColor: isDarkMode
                         ? "{% if message.tags == 'success' %}#16a34a{% elif message.tags == 'error' %}#b91c1c{% else %}
                             #1e40af{% endif %}"
-                        : "{% if message.tags == 'success' %}#22c55e{% elif message.tags == 'error' %}#ef4444{% else %}
-                            #3b82f6{% endif %}",
-                    close: true
+                : "{% if message.tags == 'success' %}#22c55e{% elif message.tags == 'error' %}#ef4444{% else %}
+                #3b82f6{% endif %}",
+                close: true
 
                 }).showToast();
             {% endfor %}
@@ -40,12 +40,14 @@
 </body>
 
 {% include "home/menu.html" %}
-<div class="container mx-auto mt-8">
-    {% block content %}
-        <!-- Content goes here -->
-    {% endblock %}
-</div>
-<footer class="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-6">
+<main class="flex-grow">
+    <div class="container mx-auto mt-8 mb-8">
+        {% block content %}
+            <!-- Content goes here -->
+        {% endblock %}
+    </div>
+</main>
+<footer class="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-4">
     <div class="max-w-screen-xl mx-auto px-4 flex flex-col sm:flex-row justify-center items-center gap-4 text-sm text-center sm:text-left">
 
         <a href="https://www.termsfeed.com/live/47acb236-3302-486d-a621-de7eecae9fac"
@@ -53,7 +55,7 @@
            class="underline hover:text-blue-600 dark:hover:text-blue-400">
             Privacy Policy
         </a>
-                <p>&copy; {{ now|date:"Y" }} ShiftMate. All rights reserved.</p>
+        <p>&copy; {{ now|date:"Y" }} ShiftMate. All rights reserved.</p>
         <a href="https://en.wikipedia.org/wiki/General_Data_Protection_Regulation"
            target="_blank"
            class="underline hover:text-blue-600 dark:hover:text-blue-400">

@@ -1,17 +1,84 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{% if dark %}dark{% endif %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShiftMate</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'documentation/css/output.css' %}" rel="stylesheet">
     <link rel="icon" href="{% get_media_prefix %}images/logo.png" type="image/x-icon">
-
 </head>
-<body class="bg-gray-100">
-<header class="bg-blue-600 text-white py-4">
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col">
+<header class="bg-blue-600 text-white py-4 dark:bg-blue-800">
 </header>
-{% include "home/menu.html" %}
-</body>
+{% include "home/menu.html" with dark=dark %}
+<main class="flex-grow">
+    <div class="container mx-auto mt-12 p-6 bg-white shadow-lg rounded-md mb-8 dark:bg-gray-800 dark:text-gray-200">
+        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center mb-4">
+            Rota Conversion</h1>
+        <ol class="list-decimal p-6">
+            <li class="mb-4 lg:mb-16 font-light text-gray-500 dark:text-white sm:text-xl">
+                First, get your rota image and go to the
+                <a href="{% url 'conversion' %}" class="text-blue-600 hover:underline dark:text-blue-400">
+                    Conversions</a> page.
+                <img src="{% static 'documentation/images/navigation.png' %}"
+                     class="w-full max-w-md mx-auto mt-6 rounded shadow-md">
 
+            </li>
+            <li class="mb-4 lg:mb-16 font-light text-gray-500 dark:text-white sm:text-xl">
+                Upload your rota image, enter the required details, and submit.
+
+                <img src="{% static 'documentation/images/conversion.png' %}"
+                     class="w-full max-w-md mx-auto mt-6 rounded shadow-md">
+            </li>
+            <li class="mb-4 lg:mb-16 font-light text-gray-500 dark:text-white sm:text-xl">
+                You’ll then be redirected to the extracted data page.
+
+                <img src="{% static 'documentation/images/extracted.png' %}"
+                     class="w-full max-w-md mx-auto mt-6 rounded shadow-md">
+            </li>
+            <li class="mb-4 lg:mb-16 font-light text-gray-500 dark:text-white sm:text-xl">
+                Click on a cell to enter the data to the form.
+
+                <img src="{% static 'documentation/images/cell.png' %}"
+                     class="w-full max-w-md mx-auto mt-6 rounded shadow-md">
+            </li>
+            <li class="mb-4 lg:mb-16 font-light text-gray-500 dark:text-white sm:text-xl">
+                Once the data is filled in, you can export it as a calendar file or add it to your Google Calendar.
+
+                <img src="{% static 'documentation/images/form.png' %}"
+                     class="w-full max-w-md mx-auto mt-6 rounded shadow-md">
+            </li>
+            <li class="mb-4 lg:mb-16 font-light text-gray-500 dark:text-white sm:text-xl">
+                If the
+                <a href="{% url 'accountSettings' %}" class="text-blue-600 hover:underline dark:text-blue-400">
+                    save to calendar</a>
+                setting is enabled, the shift will appear on the website’s
+                <a href="{% url 'creation' %}" class="text-blue-600 hover:underline dark:text-blue-400">
+                    calendar</a> page.
+                <img src="{% static 'documentation/images/calendar.png' %}"
+                     class="w-full max-w-md mx-auto mt-6 rounded shadow-md">
+
+            </li>
+        </ol>
+
+    </div>
+</main>
+<footer class="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-4">
+    <div class="max-w-screen-xl mx-auto px-4 flex flex-col sm:flex-row justify-center items-center gap-4 text-sm text-center sm:text-left">
+
+        <a href="https://www.termsfeed.com/live/47acb236-3302-486d-a621-de7eecae9fac"
+           target="_blank"
+           class="underline hover:text-blue-600 dark:hover:text-blue-400">
+            Privacy Policy
+        </a>
+        <p>&copy; {{ now|date:"Y" }} ShiftMate. All rights reserved.</p>
+        <a href="https://en.wikipedia.org/wiki/General_Data_Protection_Regulation"
+           target="_blank"
+           class="underline hover:text-blue-600 dark:hover:text-blue-400">
+            GDPR
+        </a>
+    </div>
+</footer>
+</body>
 </html>
