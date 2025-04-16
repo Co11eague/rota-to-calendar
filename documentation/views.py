@@ -17,4 +17,4 @@ def index(request):
 
 	return render(request, 'documentation/index.html', {'dark': dark,
 	                                                    'profile_picture': user_profile.profile_picture if user_profile and user_profile.profile_picture else None})
-# Create your views here.
+# Create your views here..
