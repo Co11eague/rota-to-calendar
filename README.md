@@ -24,6 +24,7 @@ Make sure you have [Node.js and npm](https://docs.npmjs.com/downloading-and-inst
 npm install
 ```
 ## 5.  Build Tailwind CSS
+Run the script in the terminal:
 ```bash
 # This builds output.css from tailwind.css (used in templates)
 find . -type f -path "*/static/*/css/tailwind.css" | while read inputFile; do
